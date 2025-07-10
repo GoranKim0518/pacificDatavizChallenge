@@ -30,7 +30,7 @@ export const useAppStore = create<AppState>((set) => ({
   setCustomImage: (url: string) => set({ customImageUrl: url }),
   
   // 차트 상태 초기값
-  selectedChart: null,
+  selectedChart: 'mobile',
   clickedPoint: null,
   
   // 차트 액션들

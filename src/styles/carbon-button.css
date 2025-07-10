@@ -1,8 +1,8 @@
-/* Carbon Design System Button - 텍스트 오른쪽 마진 적용 */
+/* Carbon Design System Button - 모바일 마진 최적화 */
 .cds--btn {
   display: inline-flex;
   align-items: center;
-  justify-content: flex-start; /* center → flex-start로 변경 */
+  justify-content: flex-start;
   font-weight: 400;
   font-size: 0.875rem;
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -10,7 +10,7 @@
   letter-spacing: 0.16px;
   border: 1px solid #0f62fe;
   border-radius: 0;
-  padding: 0.6875rem 0.9375rem 0.6875rem 1rem; /* 좌측 패딩 증가 */
+  padding: 0.6875rem 1.5rem 0.6875rem 1rem;
   margin: 0.125rem;
   min-width: 4rem;
   min-height: 2.5rem;
@@ -23,28 +23,30 @@
   text-decoration: none;
   vertical-align: top;
   white-space: nowrap;
-  text-align: left; /* 텍스트 왼쪽 정렬 */
-  padding-left: 1rem; /* 좌측 패딩 명시적 지정 */
-  padding-right: 1.5rem; /* 우측 패딩을 더 크게 */
+  text-align: left;
+  transform: scale(0.95);
+  transform-origin: left center;
 }
 
 /* 버튼 텍스트 컨테이너 */
 .cds--btn .cds--btn__text {
   flex: 1;
   text-align: left;
-  margin-right: 0.25rem; /* 텍스트 오른쪽에 4px 마진 */
+  margin-right: 0.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
 
-/* Primary 상태 (선택됨) */
-.cds--btn--primary,
-.cds--btn[aria-pressed="true"],
-.cds--btn.selected {
+/* Primary 상태 */
+.cds--btn--primary {
   background-color: #0f62fe;
   color: #ffffff;
   border-color: #0f62fe;
 }
 
-/* Tertiary 상태 (기본) - 투명 배경 */
+/* Tertiary 상태 */
 .cds--btn--tertiary {
   background-color: transparent;
   color: #0f62fe;
@@ -53,12 +55,6 @@
 
 /* Hover 상태 */
 .cds--btn:hover:not(:disabled) {
-  background-color: #0353e9;
-  color: #ffffff;
-  border-color: #0353e9;
-}
-
-.cds--btn--tertiary:hover:not(:disabled) {
   background-color: #0353e9;
   color: #ffffff;
   border-color: #0353e9;
@@ -79,8 +75,7 @@
 }
 
 /* Disabled 상태 */
-.cds--btn:disabled,
-.cds--btn[aria-disabled="true"] {
+.cds--btn:disabled {
   background-color: #c6c6c6;
   color: #8d8d8d;
   border-color: #c6c6c6;
@@ -90,30 +85,83 @@
 
 /* 버튼 그룹 스타일 */
 .carbon-btn-group {
-  display: inline-flex;
-  gap: 0.0625rem;
+  display: flex;
+  gap: 1rem;
   align-items: center;
+  justify-content: flex-start;
 }
 
 .carbon-btn-group .cds--btn {
   border-radius: 0;
   margin: 0;
-}
-
-.carbon-btn-group .cds--btn:first-child {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
-.carbon-btn-group .cds--btn:last-child {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-.carbon-btn-group .cds--btn:not(:last-child) {
-  border-right: none;
+  flex: 0 0 auto;
+  min-width: 0;
+  border: 1px solid #0f62fe;
 }
 
 .carbon-btn-group .cds--btn + .cds--btn {
   margin-left: -1px;
+}
+
+/* Primary 상태 버튼의 테두리 */
+.carbon-btn-group .cds--btn--primary {
+  border: 1px solid #0f62fe;
+}
+
+/* Tertiary 상태 버튼의 테두리 */
+.carbon-btn-group .cds--btn--tertiary {
+  border: 1px solid #0f62fe;
+}
+
+/* PC에서 강제 왼쪽 정렬 */
+@media (min-width: 641px) {
+  .carbon-btn-group {
+    justify-content: flex-start !important;
+  }
+}
+
+/* 모바일 반응형 최적화 - 마진 축소 적용 */
+@media (max-width: 640px) {
+  .cds--btn {
+    font-size: clamp(13px, 3.5vw, 15px) !important;
+    padding: clamp(8px, 2.5vw, 10px) clamp(6px, 2vw, 8px) !important; /* 우측 패딩 축소 */
+    min-width: 0 !important;
+    letter-spacing: 0.12px !important;
+    min-height: 2.25rem !important;
+  }
+  
+  /* 버튼 텍스트 우측 마진 축소 */
+  .cds--btn .cds--btn__text {
+    margin-right: 0.125rem !important; /* 0.25rem → 0.125rem로 축소 */
+  }
+  
+  .carbon-btn-group {
+    justify-content: center !important;
+    gap: 0.5rem !important; /* 버튼 간 간격도 축소 */
+  }
+  
+  .carbon-btn-group .cds--btn {
+    flex: 1 !important;
+  }
+}
+
+/* 아이폰 미니에서 더욱 축소 */
+@media (max-width: 400px) {
+  .cds--btn {
+    font-size: 12px !important;
+    padding: 8px 4px !important; /* 우측 패딩 더욱 축소 */
+    transform: scale(0.95) !important;
+  }
+  
+  .cds--btn .cds--btn__text {
+    margin-right: 0.0625rem !important; /* 1px로 최소화 */
+  }
+  
+  .carbon-btn-group {
+    gap: 0.25rem !important;
+  }
+  
+  .carbon-btn-group .cds--btn + .cds--btn {
+    margin-left: 0 !important;
+  }
 }

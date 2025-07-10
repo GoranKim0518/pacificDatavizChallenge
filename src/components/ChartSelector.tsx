@@ -7,20 +7,30 @@ const ChartSelector = () => {
   const { selectedChart, setSelectedChart } = useAppStore();
 
   return (
-    <div className="flex gap-4 mb-8 justify-start">
+    <div className="carbon-btn-group mb-8 justify-start sm:justify-start">
       <Button
-        kind={selectedChart === 'mobile' ? 'primary' : 'secondary'}
+        kind={selectedChart === 'mobile' ? 'primary' : 'tertiary'}
         onClick={() => setSelectedChart('mobile')}
         size="md"
+        style={{
+          whiteSpace: 'nowrap'
+        }}
       >
-        Mobile Ownership
+        <span className="cds--btn__text">
+          Mobile Ownership
+        </span>
       </Button>
       <Button
-        kind={selectedChart === 'egov' ? 'primary' : 'secondary'}
+        kind={selectedChart === 'egov' ? 'primary' : 'tertiary'}
         onClick={() => setSelectedChart('egov')}
         size="md"
+        style={{
+          whiteSpace: 'nowrap'
+        }}
       >
-        E-Government Index
+        <span className="cds--btn__text">
+          E-Government Index
+        </span>
       </Button>
     </div>
   );

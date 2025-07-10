@@ -2,16 +2,18 @@
 import { useAppStore } from '../stores/useAppstore';
 import ChartSelector from './ChartSelector';
 import MobOwnSctPlt from './MobOwnSctPlt';
-import EGovIndexBarChart from './EGovIndex'; // 새 컴포넌트 import
+import EGovIndexBarChart from './EGovIndex';
 
 const ChartSection = () => {
   const { selectedChart } = useAppStore();
 
   return (
-    <div className="mt-16">
+    <div>
       <ChartSelector />
       
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 overflow-hidden">
+      {/* IBM Token 06: 24px 간격 적용 */}
+      <div className="bg-white border border-gray-300 p-6 overflow-hidden" 
+           style={{ marginTop: '1.5rem' }}>
         {selectedChart === 'mobile' && (
           <div>
             <h3 className="text-xl font-semibold text-gray-900 mb-6 text-center">
@@ -26,10 +28,10 @@ const ChartSection = () => {
         {selectedChart === 'egov' && (
           <div>
             <h3 className="text-xl font-semibold text-gray-900 mb-6 text-center">
-              E-Government Development Index
+              E-Government Index
             </h3>
-            <div className="h-96 w-full overflow-hidden">
-              <EGovIndexBarChart /> {/* 새 차트 컴포넌트 적용 */}
+            <div className="w-full overflow-hidden">
+              <EGovIndexBarChart />
             </div>
           </div>
         )}

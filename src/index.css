@@ -4,29 +4,24 @@
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* globals.css 또는 index.css */
-
 /* 텍스트 선택 및 드래그 방지 */
 * {
-  /* 텍스트 선택 방지 */
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  
-  /* 드래그 방지 */
   -webkit-user-drag: none;
   -khtml-user-drag: none;
   -moz-user-drag: none;
   -o-user-drag: none;
   user-drag: none;
+  cursor: default;
 }
 
 /* 입력 필드는 텍스트 선택 허용 */
@@ -39,14 +34,7 @@ textarea,
   user-select: text;
 }
 
-/* 커서 스타일 통일 */
-body, 
-html, 
-* {
-  cursor: default;
-}
-
-/* 버튼과 클릭 가능한 요소는 포인터 커서 */
+/* 클릭 가능한 요소는 포인터 커서 */
 button, 
 [role="button"], 
 label[for], 
@@ -65,24 +53,47 @@ img {
   pointer-events: none;
 }
 
-/* 클릭 가능한 이미지는 포인터 이벤트 허용 */
 img[onclick], 
 img.clickable {
   pointer-events: auto;
   cursor: pointer;
 }
 
-
-/*반응형*/
-@media (min-width: 1280px) and (max-width: 1600px) {
-  .macbook-optimize {
-    font-size: 0.95rem;
+/* PC 해상도에서 IBM 표준 간격 적용 */
+@media (min-width: 641px) {
+  /* 본문과 차트 섹션 간 표준 간격 */
+  .chart-section-responsive {
+    margin-top: 1.5rem !important; /* IBM Token 06: 24px */
+  }
+  
+  /* 버튼과 차트 컨테이너 간 표준 간격 */
+  .chart-section-responsive > div:last-child {
+    margin-top: 1.5rem !important; /* IBM Token 06: 24px */
+  }
+  
+  /* 바 차트 국가명 폰트 축소 */
+  .chart-section-responsive svg g[transform*="translate(0,"] text {
+    font-size: 10px !important;
   }
 }
 
-@media (min-width: 1400px) and (max-width: 1600px) {
-  .macbook-optimize {
-    font-size: 1rem;
+/* 모바일 반응형 최적화 */
+@media (max-width: 640px) {
+  .chart-section-responsive {
+    margin-left: -2rem;
+    margin-right: -2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .chart-section-responsive .carbon-btn-group {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  
+  /* 바 차트 X축 국가명 폰트 크기 축소 */
+  .chart-section-responsive svg g[transform*="translate(0,"] text {
+    font-size: 8px !important;
   }
 }
-
