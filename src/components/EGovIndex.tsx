@@ -64,7 +64,7 @@ const EGovIndexBarChart = () => {
       <ResponsiveBar
         data={eGovernmentIndexBarData}
         keys={['value']}
-        indexBy="countryCode" // country → countryCode로 변경
+        indexBy="country"
         margin={{ 
           top: 60, 
           right: 80, 
@@ -89,7 +89,7 @@ const EGovIndexBarChart = () => {
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0, // 2글자라서 회전 불필요
-          legend: 'Countries (ISO codes)',
+          legend: 'Countries',
           legendPosition: 'middle',
           legendOffset: isMobile ? 60 : 45, // 오프셋 축소
           // format 함수 제거 - 원본 countryCode 그대로 사용
@@ -125,13 +125,7 @@ const EGovIndexBarChart = () => {
               {data.country}
             </div>
             <div style={{ color: color, marginBottom: '4px' }}>
-              EGI Score: {value}
-            </div>
-            <div style={{ color: '#e74c3c', fontSize: isMobile ? '10px' : '12px', marginBottom: '4px' }}>
-              Average: {averageEGI.toFixed(2)}
-            </div>
-            <div style={{ color: '#666', fontSize: isMobile ? '10px' : '12px' }}>
-              Code: {data.countryCode}
+              EGI: {value}
             </div>
           </div>
         )}
