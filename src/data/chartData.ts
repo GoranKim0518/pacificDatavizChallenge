@@ -12,11 +12,12 @@ interface RawDataItem {
   NATURE: string | null;
 }
 
-interface ScatterPlotDataPoint {
+export interface ScatterPlotDataPoint {
   x: string; // 국가 코드
   y: number; // IT_MOB_OWN_value
   country: string;
   sex: string;
+  year: number;
 }
 
 interface ScatterPlotData {
@@ -68,7 +69,8 @@ export const mobileOwnershipScatterData: ScatterPlotData[] = (() => {
       x: item.GEO_PICT,
       y: item.IT_MOB_OWN_value!,
       country: item.GEO_PICT,
-      sex: item.SEX === 'M' ? 'Male' : 'Female'
+      sex: item.SEX === 'M' ? 'Male' : 'Female',
+      year: item.TIME_PERIOD
     };
 
     if (item.SEX === 'M') {
@@ -104,6 +106,7 @@ export interface BarChartDataPoint {
   country: string;
   value: number;
   countryCode: string;
+  year: number;
   [key: string]: string | number;
 }
 
@@ -130,7 +133,8 @@ export const eGovernmentIndexBarData: BarChartDataPoint[] = (() => {
     .map(item => ({
       country: item.GEO_PICT,
       value: item.EGI_value!,
-      countryCode: item.GEO_PICT
+      countryCode: item.GEO_PICT,
+      year: item.TIME_PERIOD
     }))
     .sort((a, b) => b.value - a.value); // 값 기준 내림차순 정렬
 

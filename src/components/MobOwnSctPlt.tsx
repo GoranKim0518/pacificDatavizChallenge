@@ -19,7 +19,7 @@ const MobOwnSctPlt = () => {
     : { top: 60, right: 90, bottom: 90, left: 100 }; // PC: right +20px, left +10px 증가
 
   return (
-    <div style={{ height: '384px', width: '100%', position: 'relative', overflow: 'hidden' }}>
+    <div style={{ height: '384px', width: '100%', position: 'relative', overflow: 'visible', zIndex: 0 }}>
       <ResponsiveScatterPlot
         data={mobileOwnershipScatterData}
         margin={chartMargin}
@@ -78,18 +78,25 @@ const MobOwnSctPlt = () => {
             style={{
               background: '#fff',
               color: '#222',
-              padding: '8px 12px',
-              borderRadius: '4px',
-              fontSize: '12px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
-              border: '1px solid #e0e0e0'
+              padding: '12px 16px',
+              borderRadius: '8px',
+              fontSize: isMobile ? '12px' : '14px',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+              border: '1px solid #e0e0e0',
+              minWidth: '180px',
+              zIndex: 9999,
+              position: 'relative',
+              pointerEvents: 'auto',
             }}
           >
-            <div style={{ fontWeight: 'bold', marginBottom: '2px' }}>
+            <div style={{ fontWeight: 'bold', marginBottom: '8px', fontSize: isMobile ? '14px' : '16px' }}>
               {node.data.x}
             </div>
-            <div style={{ color: node.color }}>
+            <div style={{ color: node.color, marginBottom: '4px' }}>
               {node.serieId}: {node.data.y}%
+            </div>
+            <div style={{ color: '#666', fontSize: isMobile ? '12px' : '13px' }}>
+              Year: {node.data.year}
             </div>
           </div>
         )}

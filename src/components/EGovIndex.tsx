@@ -1,13 +1,7 @@
 import { ResponsiveBar } from '@nivo/bar';
 import type { BarCustomLayerProps } from '@nivo/bar';
 import { eGovernmentIndexBarData } from '../data/chartData';
-
-interface BarChartDataPoint {
-  country: string;
-  value: number;
-  countryCode: string;
-  [key: string]: string | number;
-}
+import type { BarChartDataPoint } from '../data/chartData';
 
 const EGovIndexBarChart = () => {
   if (!eGovernmentIndexBarData || eGovernmentIndexBarData.length === 0) {
@@ -126,6 +120,9 @@ const EGovIndexBarChart = () => {
             </div>
             <div style={{ color: color, marginBottom: '4px' }}>
               EGI: {value}
+            </div>
+            <div style={{ color: '#666', fontSize: isMobile ? '12px' : '13px' }}>
+              Year: {data.year}
             </div>
           </div>
         )}
