@@ -1,5 +1,5 @@
 // components/HeroSection.tsx
-import { useAppStore } from '../stores/useAppstore';
+import { useAppStore } from '../../stores/useAppstore';
 
 const HeroSection = () => {
   const { customImageUrl, setCustomImage } = useAppStore();

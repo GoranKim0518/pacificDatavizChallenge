@@ -1,6 +1,6 @@
 // App.tsx
-import HeroSection from './components/HeroSection';
-import ArticleSection from './components/ArticleSection';
+import HeroSection from './components/sections/HeroSection';
+import ArticleSection from './components/sections/ArticleSection';
 
 const App = () => {
   return (

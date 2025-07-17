@@ -1,0 +1,92 @@
+import ChartSection from "./ChartSection";
+import InfrastructureChartSection from "../sections/InfrastructureChartSection";
+
+const ArticleSection = () => {
+  return (
+    <section className="bg-gradient-to-b from-blue-50 to-white py-16">
+      <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <article className="bg-white border border-gray-300 p-8 sm:p-12 lg:p-16">
+          {/* Article Header */}
+          <header className="mb-12">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 mt-8 mb-8"
+                style={{ lineHeight: '32px' }}>
+              IT Sector Performance in the Pacific
+            </h2>
+          </header>
+
+          {/* Article Content */}
+          <div className="prose prose-lg max-w-none">
+            <p className="text-lg text-gray-700 mb-6"
+               style={{ lineHeight: '1.5' }}>
+              Mobile phone ownership rates in Pacific countries demonstrate strong performance. 
+              Most countries achieve ownership rates exceeding 70%, with even the lowest-performing 
+              country, Kiribati, reaching 50%. Additionally, women's mobile phone ownership rates 
+              have reached levels comparable to those of men across the region, indicating successful 
+              digital inclusion efforts.
+            </p>
+
+            <p className="text-lg text-gray-700 mb-6" 
+               style={{ lineHeight: '1.5' }}>
+              Their E-Government Index (EGI) scores show respectable performance. Although Papua New 
+              Guinea shows a lower EGI of 0.32, other countries perform well with an average of 0.43. 
+              According to the UN E-Government Survey 2024, while this is below the global average 
+              of 0.6382—which includes many developed nations—it represents a solid middle-tier 
+              performance for Small Island Developing States (SIDS).
+            </p>
+
+            <p className="text-lg text-gray-700"
+               style={{ lineHeight: '1.5', marginBottom: '2rem' }}>
+              These achievements suggest potential for continued development in the IT sector.
+            </p>
+          </div>
+
+          {/* 첫 번째 차트 섹션 - IBM 표준 간격 적용 */}
+          <div className="not-prose chart-section-responsive" style={{ marginTop: '1.5rem' }}>
+            <ChartSection />
+          </div>
+
+          {/* 디지털 인프라 글 섹션 */}
+          <div className="prose prose-lg max-w-none" style={{ marginTop: '2rem' }}>
+            <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 mt-8 mb-8"
+                style={{ lineHeight: '32px' }}>
+              Digital Infrastructure
+            </h2>
+
+            <p className="text-lg text-gray-700 mb-6"
+              style={{ lineHeight: '1.5' }}>
+              Pacific Island nations demonstrate a pronounced shift toward mobile-centric digital 
+              infrastructure, with fixed broadband networks playing a minimal role in regional 
+              connectivity. The overwhelming majority of Pacific nations show mobile 4G network 
+              usage rates that far exceed their fixed network counterparts, with many countries 
+              displaying near-complete reliance on mobile infrastructure.
+            </p>
+
+            <p className="text-lg text-gray-700 mb-6"
+              style={{ lineHeight: '1.5' }}>
+              Internet usage patterns across the Pacific reinforce this mobile-first approach, 
+              with consistently low correlation between internet usage and fixed broadband network 
+              utilization throughout the region. This pattern reflects the practical realities 
+              of deploying connectivity solutions across dispersed island territories.
+            </p>
+
+            <p className="text-lg text-gray-700"
+              style={{ lineHeight: '1.5', marginBottom: '2rem' }}>
+              However, the limited fixed broadband infrastructure presents concerns for long-term 
+              digital development. Mobile networks have inherent limitations in bandwidth capacity 
+              compared to fiber-optic fixed networks, potentially constraining the region's ability 
+              to support data-intensive applications and emerging technologies requiring high-speed, 
+              stable connections.
+            </p>
+          </div>
+
+          {/* 두 번째 차트 섹션 - 디지털 인프라 차트들 */}
+          <div className="not-prose chart-section-responsive" style={{ marginTop: '1.5rem' }}>
+            <InfrastructureChartSection />
+          </div>
+        </article>
+      </div>
+    </section>
+  );
+};
+
+export default ArticleSection;

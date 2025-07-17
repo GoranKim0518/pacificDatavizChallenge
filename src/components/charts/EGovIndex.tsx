@@ -1,7 +1,7 @@
 import { ResponsiveBar } from '@nivo/bar';
 import type { BarCustomLayerProps } from '@nivo/bar';
-import { eGovernmentIndexBarData } from '../data/chartData';
-import type { BarChartDataPoint } from '../data/chartData';
+import { eGovernmentIndexBarData } from '../../data/chartData';
+import type { BarChartDataPoint } from '../../data/chartData';
 
 const EGovIndexBarChart = () => {
   if (!eGovernmentIndexBarData || eGovernmentIndexBarData.length === 0) {
@@ -83,7 +83,7 @@ const EGovIndexBarChart = () => {
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0, // 2글자라서 회전 불필요
-          legend: 'Countries',
+          legend: 'Country',
           legendPosition: 'middle',
           legendOffset: isMobile ? 60 : 45, // 오프셋 축소
           // format 함수 제거 - 원본 countryCode 그대로 사용
@@ -113,7 +113,8 @@ const EGovIndexBarChart = () => {
             fontSize: isMobile ? '12px' : '14px',
             boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
             border: '1px solid #e0e0e0',
-            minWidth: '180px'
+            minWidth: '180px',
+            pointerEvents: 'auto',
           }}>
             <div style={{ fontWeight: 'bold', marginBottom: '8px', fontSize: isMobile ? '14px' : '16px' }}>
               {data.country}
