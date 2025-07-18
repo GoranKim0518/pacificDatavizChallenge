@@ -1,5 +1,6 @@
 import ChartSection from "./ChartSection";
 import InfrastructureChartSection from "../sections/InfrastructureChartSection";
+import DownsoftChart from "../charts/DownsoftChart";
 
 const ArticleSection = () => {
   return (
@@ -7,12 +8,12 @@ const ArticleSection = () => {
       <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <article className="bg-white border border-gray-300 p-8 sm:p-12 lg:p-16">
           {/* Article Header */}
-          <header className="mb-12">
+          <div className="prose prose-lg max-w-none" style={{ marginTop: '2rem' }}>
             <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 mt-8 mb-8"
                 style={{ lineHeight: '32px' }}>
               IT Sector Performance in the Pacific
             </h2>
-          </header>
+          </div>
 
           {/* Article Content */}
           <div className="prose prose-lg max-w-none">
@@ -83,6 +84,49 @@ const ArticleSection = () => {
           <div className="not-prose chart-section-responsive" style={{ marginTop: '1.5rem' }}>
             <InfrastructureChartSection />
           </div>
+
+          {/* 디지털 리터러시 글 섹션 */}
+          <div className="prose prose-lg max-w-none" style={{ marginTop: '2rem' }}>
+            <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 mt-8 mb-8"
+                style={{ lineHeight: '32px' }}>
+              Infrastructure vs Digital Literacy
+            </h2>
+
+            <p className="text-lg text-gray-700 mb-6"
+              style={{ lineHeight: '1.5' }}>
+              The Pacific region demonstrates a notable gap between educational technology 
+              infrastructure and actual digital competency. While most Pacific nations including Fiji, 
+              Tuvalu, and Vanuatu have achieved impressive 4G network coverage rates exceeding 95%, 
+              since software is typically managed in fixed network environments, this mobile connectivity 
+              success does not translate into correspondingly high digital literacy rates.
+            </p>
+
+            <p className="text-lg text-gray-700 mb-6"
+              style={{ lineHeight: '1.5' }}>
+              Despite having mobile infrastructure that could facilitate digital service access, 
+              data reveals that the proportion of individuals capable of finding, downloading, installing, 
+              and configuring software remains considerably low across most Pacific nations. Countries 
+              like Fiji, Kiribati, and Tonga show software competency rates below 20%, with concerning 
+              gender disparities evident throughout the region. This indicates that foundational digital 
+              skills development that extends far beyond network access capabilities is necessary.
+            </p>
+
+            <p className="text-lg text-gray-700"
+              style={{ lineHeight: '1.5', marginBottom: '2rem' }}>
+              The implications of this digital skills shortfall are particularly significant for Pacific 
+              nations' development prospects. This mismatch between mobile connectivity and practical 
+              digital literacy creates barriers to leveraging technology for economic advancement, potentially 
+              limiting the region's ability to capitalize on digital opportunities and participate effectively 
+              in the global digital economy, even when other digital infrastructure elements may be readily available.
+            </p>
+          </div>
+
+          {/* 세 번째 차트 - 디지털 리터러시 차트 */}
+          <div className="not-prose chart-section-responsive" style={{ marginTop: '2rem' }}>
+            <DownsoftChart />
+          </div>
+
+
         </article>
       </div>
     </section>
