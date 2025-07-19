@@ -1,0 +1,342 @@
+[
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"NU",
+    "COMPOSITE_BREAKDOWN":"PRIMARY_ALL",
+    "TIME_PERIOD":2021,
+    "OBS_VALUE":100.0,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"R",
+    "DATA_SOURCE":"UNESCO Institute for Statistics (UIS)"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"NU",
+    "COMPOSITE_BREAKDOWN":"SECONDARY_UPPER",
+    "TIME_PERIOD":2019,
+    "OBS_VALUE":100.0,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"G",
+    "DATA_SOURCE":"UNESCO Institute of Statistics"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"WS",
+    "COMPOSITE_BREAKDOWN":"SECONDARY_UPPER",
+    "TIME_PERIOD":2019,
+    "OBS_VALUE":100.0,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"G",
+    "DATA_SOURCE":"UNESCO Institute of Statistics"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"MH",
+    "COMPOSITE_BREAKDOWN":"PRIMARY_ALL",
+    "TIME_PERIOD":2022,
+    "OBS_VALUE":26.1,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"R",
+    "DATA_SOURCE":"UNESCO Institute for Statistics (UIS)"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"VU",
+    "COMPOSITE_BREAKDOWN":"PRIMARY_ALL",
+    "TIME_PERIOD":2015,
+    "OBS_VALUE":56.2,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"N",
+    "DATA_SOURCE":"Vanuatu Ministry of Education and Training, Annual Statistical Report, 2015, Primary School"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"NR",
+    "COMPOSITE_BREAKDOWN":"SECONDARY_LOWER",
+    "TIME_PERIOD":2019,
+    "OBS_VALUE":100.0,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"G",
+    "DATA_SOURCE":"UNESCO Institute of Statistics"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"NR",
+    "COMPOSITE_BREAKDOWN":"PRIMARY_ALL",
+    "TIME_PERIOD":2022,
+    "OBS_VALUE":0.0,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"R",
+    "DATA_SOURCE":"UNESCO Institute for Statistics (UIS)"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"CK",
+    "COMPOSITE_BREAKDOWN":"_Z",
+    "TIME_PERIOD":2016,
+    "OBS_VALUE":100.0,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"N",
+    "DATA_SOURCE":"Cook Islands, Ministry of Education."
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"WS",
+    "COMPOSITE_BREAKDOWN":"PRIMARY_ALL",
+    "TIME_PERIOD":2022,
+    "OBS_VALUE":96.5,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"R",
+    "DATA_SOURCE":"UNESCO Institute for Statistics (UIS)"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"WS",
+    "COMPOSITE_BREAKDOWN":"SECONDARY_LOWER",
+    "TIME_PERIOD":2019,
+    "OBS_VALUE":15.3,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"G",
+    "DATA_SOURCE":"UNESCO Institute of Statistics"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"NU",
+    "COMPOSITE_BREAKDOWN":"SECONDARY_LOWER",
+    "TIME_PERIOD":2019,
+    "OBS_VALUE":100.0,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"G",
+    "DATA_SOURCE":"UNESCO Institute of Statistics"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"CK",
+    "COMPOSITE_BREAKDOWN":"SECONDARY_UPPER",
+    "TIME_PERIOD":2019,
+    "OBS_VALUE":100.0,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"G",
+    "DATA_SOURCE":"UNESCO Institute of Statistics"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"TV",
+    "COMPOSITE_BREAKDOWN":"SECONDARY_LOWER",
+    "TIME_PERIOD":2019,
+    "OBS_VALUE":91.1,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"G",
+    "DATA_SOURCE":"UNESCO Institute of Statistics"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"KI",
+    "COMPOSITE_BREAKDOWN":"PRIMARY_ALL",
+    "TIME_PERIOD":2020,
+    "OBS_VALUE":19.59,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"G",
+    "DATA_SOURCE":"UNESCO Institute of Statistics"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"SB",
+    "COMPOSITE_BREAKDOWN":"SECONDARY_ALL",
+    "TIME_PERIOD":2015,
+    "OBS_VALUE":14.0,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"G",
+    "DATA_SOURCE":"UNESCO Institute of Statistics"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"SB",
+    "COMPOSITE_BREAKDOWN":"PRIMARY_ALL",
+    "TIME_PERIOD":2019,
+    "OBS_VALUE":13.2,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"R",
+    "DATA_SOURCE":"UNESCO Institute for Statistics (UIS)"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"CK",
+    "COMPOSITE_BREAKDOWN":"SECONDARY_LOWER",
+    "TIME_PERIOD":2019,
+    "OBS_VALUE":100.0,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"G",
+    "DATA_SOURCE":"UNESCO Institute of Statistics"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"SB",
+    "COMPOSITE_BREAKDOWN":"SECONDARY_LOWER",
+    "TIME_PERIOD":2018,
+    "OBS_VALUE":7.3,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"G",
+    "DATA_SOURCE":"UNESCO Institute of Statistics"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"TV",
+    "COMPOSITE_BREAKDOWN":"PRIMARY_ALL",
+    "TIME_PERIOD":2021,
+    "OBS_VALUE":100.0,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"R",
+    "DATA_SOURCE":"UNESCO Institute for Statistics (UIS)"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"TO",
+    "COMPOSITE_BREAKDOWN":"PRIMARY_ALL",
+    "TIME_PERIOD":2022,
+    "OBS_VALUE":46.9,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"R",
+    "DATA_SOURCE":"UNESCO Institute for Statistics (UIS)"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"CK",
+    "COMPOSITE_BREAKDOWN":"PRIMARY_ALL",
+    "TIME_PERIOD":2022,
+    "OBS_VALUE":100.0,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"R",
+    "DATA_SOURCE":"UNESCO Institute for Statistics (UIS)"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"SB",
+    "COMPOSITE_BREAKDOWN":"SECONDARY_UPPER",
+    "TIME_PERIOD":2018,
+    "OBS_VALUE":9.8,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"G",
+    "DATA_SOURCE":"UNESCO Institute of Statistics"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"VU",
+    "COMPOSITE_BREAKDOWN":"SECONDARY_ALL",
+    "TIME_PERIOD":2015,
+    "OBS_VALUE":59.2,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"N",
+    "DATA_SOURCE":"Vanuatu Ministry of Education and Training, Annual Statistical Report, 2015, Secondary School"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"NR",
+    "COMPOSITE_BREAKDOWN":"SECONDARY_UPPER",
+    "TIME_PERIOD":2019,
+    "OBS_VALUE":100.0,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"G",
+    "DATA_SOURCE":"UNESCO Institute of Statistics"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"NU",
+    "COMPOSITE_BREAKDOWN":"_Z",
+    "TIME_PERIOD":2016,
+    "OBS_VALUE":100.0,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"N",
+    "DATA_SOURCE":"Niue Education Department"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"MH",
+    "COMPOSITE_BREAKDOWN":"_Z",
+    "TIME_PERIOD":2016,
+    "OBS_VALUE":22.3,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"N",
+    "DATA_SOURCE":"UNESCO Institute for Statistics"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"TV",
+    "COMPOSITE_BREAKDOWN":"SECONDARY_UPPER",
+    "TIME_PERIOD":2019,
+    "OBS_VALUE":50.0,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"G",
+    "DATA_SOURCE":"UNESCO Institute of Statistics"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"WS",
+    "COMPOSITE_BREAKDOWN":"SECONDARY_ALL",
+    "TIME_PERIOD":2017,
+    "OBS_VALUE":91.0,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"N",
+    "DATA_SOURCE":"Samoa Ministry of Education, Sports and Culture - Education Statistical Digest Samoa 2017, Computer laboratories - Government secondary schools"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"MH",
+    "COMPOSITE_BREAKDOWN":"SECONDARY_LOWER",
+    "TIME_PERIOD":2019,
+    "OBS_VALUE":92.6,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"G",
+    "DATA_SOURCE":"UNESCO Institute of Statistics"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"FM",
+    "COMPOSITE_BREAKDOWN":"PRIMARY_ALL",
+    "TIME_PERIOD":2022,
+    "OBS_VALUE":32.2,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"R",
+    "DATA_SOURCE":"UNESCO Institute for Statistics (UIS)"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"MH",
+    "COMPOSITE_BREAKDOWN":"SECONDARY_UPPER",
+    "TIME_PERIOD":2019,
+    "OBS_VALUE":94.1,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"G",
+    "DATA_SOURCE":"UNESCO Institute of Statistics"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"PW",
+    "COMPOSITE_BREAKDOWN":"PRIMARY_ALL",
+    "TIME_PERIOD":2021,
+    "OBS_VALUE":100.0,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"R",
+    "DATA_SOURCE":"UNESCO Institute for Statistics (UIS)"
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"PF",
+    "COMPOSITE_BREAKDOWN":"PRIMARY_ALL",
+    "TIME_PERIOD":2020,
+    "OBS_VALUE":100.0,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"N",
+    "DATA_SOURCE":"French Polynesia, Sustainable Development Goals in French Polynesia 2021."
+  },
+  {
+    "INDICATOR":"SE_ACS_CMPTR",
+    "GEO_PICT":"PF",
+    "COMPOSITE_BREAKDOWN":"SECONDARY_ALL",
+    "TIME_PERIOD":2020,
+    "OBS_VALUE":100.0,
+    "UNIT_MEASURE":"PERCENT",
+    "REPORTING_TYPE":"N",
+    "DATA_SOURCE":"French Polynesia, Sustainable Development Goals in French Polynesia 2021."
+  }
+]
