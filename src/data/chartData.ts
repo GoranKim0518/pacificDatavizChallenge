@@ -1,4 +1,7 @@
+// data/chartData.ts
 import rawData from "./json/merged-all.json";
+import educationComputerRawData from "./json/SE_ACS_CMPTR.json";
+import ictTradeRawData from "./json/DF_TRADE_ICT_records.json";
 
 // 기본 데이터 타입 정의
 export interface RawDataItem {
@@ -23,111 +26,207 @@ export interface RawDataItem {
   DOWNSOFT_unit: string | null;
 }
 
-// 원본 데이터 타입 캐스팅
 const data: RawDataItem[] = rawData as RawDataItem[];
 
-// 태평양 국가 목록
 export const PACIFIC_COUNTRIES = [
   'CK', 'FJ', 'FM', 'KI', 'MH', 'NC', 'NR', 'NU', 
   'PF', 'PG', 'PW', 'SB', 'TO', 'TV', 'VU', 'WS'
-];
+] as const;
 
-// 이중축 차트용 데이터 타입 - 완전한 null값 처리 및 연도 정보 포함
+type PacificCountry = typeof PACIFIC_COUNTRIES[number];
+
+// SE_ACS_CMPTR 데이터용 타입 정의
+export interface EducationComputerRawData {
+  INDICATOR: string;
+  GEO_PICT: string;
+  COMPOSITE_BREAKDOWN: string;
+  TIME_PERIOD: number;
+  OBS_VALUE: number | null;
+  UNIT_MEASURE: string;
+  REPORTING_TYPE: string;
+  DATA_SOURCE: string;
+}
+
+// ICT 무역 데이터 타입 정의
+export interface ICTTradeRawData {
+  GEO_PICT: string;
+  TIME_PERIOD: number;
+  TRADE_FLOW: 'M' | 'X';
+  ICT_PRDSRV: 'ICTPRD' | 'ICTSRV';
+  OBS_VALUE: number;
+  UNIT_MULT: number;
+  OBS_STATUS?: string;
+  UNIT_MEASURE?: string;
+}
+
+// Sunburst 차트용 타입 정의
+export interface SunburstNode {
+  id: string;
+  parent?: string;
+  value?: number;
+  children?: SunburstNode[];
+}
+
+export interface SunburstFilterOptions {
+  tradeFlow?: 'M' | 'X' | 'both';
+  ictType?: 'ICTPRD' | 'ICTSRV' | 'both';
+  countries?: string[];
+  yearRange?: [number, number];
+}
+
+// 교육 레벨 매핑
+export const EDUCATION_LEVEL_LABELS = {
+  'PRIMARY_ALL': 'Primary Education',
+  'SECONDARY_UPPER': 'Upper Secondary', 
+  '_Z': 'All Levels'
+} as const;
+
+type EducationLevelCode = keyof typeof EDUCATION_LEVEL_LABELS;
+
+// D3.js 전용 HeatMap 데이터 타입
+export interface D3HeatmapDataPoint {
+  country: string;
+  level: string;
+  value: number | null;
+  year: number | null;
+  source: string | null;
+}
+
+interface ProcessedEducationData {
+  value: number | null;
+  year: number;
+  source: string;
+}
+
+// D3.js 전용 HeatMap 데이터 처리 함수
+export const processEducationComputerDataForD3 = (): {
+  data: D3HeatmapDataPoint[];
+  countries: string[];
+  levels: string[];
+} => {
+  const rawEducationData = educationComputerRawData as EducationComputerRawData[];
+  const allowedLevels: EducationLevelCode[] = ['_Z', 'PRIMARY_ALL', 'SECONDARY_UPPER'];
+  
+  const filteredData = rawEducationData.filter(item => 
+    PACIFIC_COUNTRIES.includes(item.GEO_PICT as PacificCountry) && 
+    allowedLevels.includes(item.COMPOSITE_BREAKDOWN as EducationLevelCode)
+  );
+
+  const dataMap = new Map<string, ProcessedEducationData>();
+  
+  filteredData.forEach(item => {
+    const key = `${item.GEO_PICT}-${item.COMPOSITE_BREAKDOWN}`;
+    const existing = dataMap.get(key);
+    
+    if (!existing || item.TIME_PERIOD > existing.year) {
+      dataMap.set(key, {
+        value: item.OBS_VALUE,
+        year: item.TIME_PERIOD,
+        source: item.DATA_SOURCE || 'Unknown'
+      });
+    }
+  });
+  
+  const heatmapData: D3HeatmapDataPoint[] = [];
+  const countries = [...PACIFIC_COUNTRIES].sort();
+  const levels = allowedLevels.map(code => EDUCATION_LEVEL_LABELS[code]);
+  
+  countries.forEach((country) => {
+    allowedLevels.forEach((levelCode) => {
+      const levelLabel = EDUCATION_LEVEL_LABELS[levelCode];
+      const key = `${country}-${levelCode}`;
+      const data = dataMap.get(key);
+      
+      heatmapData.push({
+        country: country,
+        level: levelLabel,
+        value: data?.value ?? null,
+        year: data?.year ?? null,
+        source: data?.source ?? null
+      });
+    });
+  });
+  
+  return {
+    data: heatmapData,
+    countries: countries,
+    levels: levels
+  };
+};
+
+// D3.js 전용 색상 함수
+export const getHeatMapColor = (value: number | null): string => {
+  if (value === null) return '#f3f4f6';
+  if (value >= 80) return '#08306b';
+  if (value >= 60) return '#2171b5';
+  if (value >= 40) return '#4292c6';
+  if (value >= 20) return '#6baed6';
+  if (value > 0) return '#c6dbef';
+  return '#deebf7';
+};
+
+// ===== 공통 데이터 처리 함수들 =====
 export interface ProcessedChartData {
   country: string;
-  population_covered_4G_percentage: number; // 차트 렌더링용 (null → 0 변환)
-  fixed_broadband_subscriptions_per_100: number; // 차트 렌더링용 (null → 0 변환)
-  // 툴팁용 원본 데이터 보존
+  population_covered_4G_percentage: number;
+  fixed_broadband_subscriptions_per_100: number;
   original_4G_value: number | null;
   original_broadband_value: number | null;
-  // 연도 정보 추가
   coverage_year: number | null;
   broadband_year: number | null;
 }
 
-export interface DualAxisChartConfig {
-  margin: {
-    top: number;
-    right: number;
-    bottom: number;
-    left: number;
-  };
-  padding: number;
-  pointSize: number;
-  pointBorderWidth: number;
-}
-
-// 차트 기본 설정 - 색상 독립성 확보
-export const defaultDualAxisConfig: DualAxisChartConfig = {
-  margin: { top: 50, right: 120, bottom: 100, left: 60 },
-  padding: 0.3,
-  pointSize: 6,
-  pointBorderWidth: 2,
-};
-
-// 이중축 차트용 데이터 처리 함수 - 완전한 null값 처리 및 연도 정보 포함
 export const processChartData = (): ProcessedChartData[] => {
   return PACIFIC_COUNTRIES.map(country => {
     const countryData = data.filter(
       (item: RawDataItem) => item.GEO_PICT === country
     );
     
-    // IT_MOB_4GNTWK_value (4G 네트워크 커버리지)가 있는 최신 데이터
     const coverageData = countryData
       .filter(item => item.IT_MOB_4GNTWK_value !== null)
       .sort((a, b) => b.TIME_PERIOD - a.TIME_PERIOD)[0];
     
-    // IT_NET_BBND_value (고정 인터넷 구독률)가 있는 최신 데이터
     const broadbandData = countryData
       .filter(item => item.IT_NET_BBND_value !== null)
       .sort((a, b) => b.TIME_PERIOD - a.TIME_PERIOD)[0];
     
-    // 원본 값 보존
     const original4G = coverageData?.IT_MOB_4GNTWK_value ?? null;
     const originalBroadband = broadbandData?.IT_NET_BBND_value ?? null;
     
     return {
       country,
-      // 차트 렌더링용 - null을 0으로 변환
       population_covered_4G_percentage: original4G ?? 0,
       fixed_broadband_subscriptions_per_100: originalBroadband ?? 0,
-      // 툴팁용 - 원본 값 보존
       original_4G_value: original4G,
       original_broadband_value: originalBroadband,
-      // 연도 정보 추가
       coverage_year: coverageData?.TIME_PERIOD ?? null,
       broadband_year: broadbandData?.TIME_PERIOD ?? null,
     };
   });
 };
 
-// 축 동기화를 위한 스케일 계산 함수
-export const calculateScaleRatio = (data: ProcessedChartData[]) => {
-  const coverageMax = Math.max(...data.map(d => d.population_covered_4G_percentage));
-  const broadbandMax = Math.max(...data.map(d => d.fixed_broadband_subscriptions_per_100));
-  
-  // 0으로 나누기 방지
-  const safeScaleRatio = broadbandMax > 0 ? coverageMax / broadbandMax : 1;
-  
-  return {
-    mobMax: coverageMax,
-    netMax: broadbandMax,
-    scaleRatio: safeScaleRatio
-  };
-};
+// ===== Chart.js 호환성을 위한 변환 함수들 =====
+interface BarChartItem {
+  country: string;
+  IT_MOB_4GNTWK_value: number;
+}
 
-// Nivo 차트용 데이터 변환 함수 - 타입 안전성 확보
-export const transformForBarChart = (data: ProcessedChartData[]) => {
+export const transformForBarChart = (data: ProcessedChartData[]): BarChartItem[] => {
   return data.map(item => ({
     country: item.country,
     IT_MOB_4GNTWK_value: item.population_covered_4G_percentage
   }));
 };
 
+interface LineChartData {
+  id: string;
+  data: { x: string; y: number }[];
+}
+
 export const transformForLineChart = (
   data: ProcessedChartData[], 
   scaleRatio: number
-) => {
+): LineChartData[] => {
   return [{
     id: 'Fixed_Broadband_Subscriptions',
     data: data.map(d => ({
@@ -137,7 +236,26 @@ export const transformForLineChart = (
   }];
 };
 
-// 기존 Scatter Plot 관련 타입 및 데이터 (유지)
+interface ScaleRatioResult {
+  mobMax: number;
+  netMax: number;
+  scaleRatio: number;
+}
+
+export const calculateScaleRatio = (data: ProcessedChartData[]): ScaleRatioResult => {
+  const coverageMax = Math.max(...data.map(d => d.population_covered_4G_percentage));
+  const broadbandMax = Math.max(...data.map(d => d.fixed_broadband_subscriptions_per_100));
+  
+  const safeScaleRatio = broadbandMax > 0 ? coverageMax / broadbandMax : 1;
+  
+  return {
+    mobMax: coverageMax,
+    netMax: broadbandMax,
+    scaleRatio: safeScaleRatio
+  };
+};
+
+// ===== Scatter Plot 데이터 =====
 export interface ScatterPlotDataPoint {
   x: string;
   y: number;
@@ -151,7 +269,6 @@ interface ScatterPlotData {
   data: ScatterPlotDataPoint[];
 }
 
-// Scatter Plot용 데이터 변환 (기존 로직 유지)
 export const mobileOwnershipScatterData: ScatterPlotData[] = (() => {
   const filteredData = data.filter(item => 
     item.IT_MOB_OWN_value !== null && 
@@ -183,9 +300,11 @@ export const mobileOwnershipScatterData: ScatterPlotData[] = (() => {
   const femaleData: ScatterPlotDataPoint[] = [];
 
   finalData.forEach(item => {
+    if (item.IT_MOB_OWN_value === null || item.SEX === null) return;
+
     const dataPoint: ScatterPlotDataPoint = {
       x: item.GEO_PICT,
-      y: item.IT_MOB_OWN_value!,
+      y: item.IT_MOB_OWN_value,
       country: item.GEO_PICT,
       sex: item.SEX === 'M' ? 'Male' : 'Female',
       year: item.TIME_PERIOD
@@ -212,16 +331,14 @@ export const availableCountries = Array.from(
   )
 ).sort();
 
-// E-Government Index 바 차트용 타입 정의 (기존 유지)
+// ===== E-Government Index 데이터 =====
 export interface BarChartDataPoint {
   country: string;
   value: number;
   countryCode: string;
   year: number;
-  [key: string]: string | number;
 }
 
-// E-Government Index 바 차트용 데이터 변환 (기존 로직 유지)
 export const eGovernmentIndexBarData: BarChartDataPoint[] = (() => {
   const filteredData = data.filter(item => 
     item.EGI_value !== null && 
@@ -238,6 +355,7 @@ export const eGovernmentIndexBarData: BarChartDataPoint[] = (() => {
   });
 
   const barData: BarChartDataPoint[] = Array.from(countryLatestData.values())
+    .filter(item => item.EGI_value !== null)
     .map(item => ({
       country: item.GEO_PICT,
       value: item.EGI_value!,
@@ -253,7 +371,7 @@ export const egiAvailableCountries = eGovernmentIndexBarData
   .map(item => item.country)
   .sort();
 
-// Downsoft 차트용 데이터 타입 추가
+// ===== Downsoft 차트 데이터 =====
 export interface DownsoftChartData {
   country: string;
   male: number;
@@ -264,17 +382,15 @@ export interface DownsoftChartData {
   female_year: number | null;
 }
 
-// Downsoft 데이터 처리 함수
 export const processDownsoftChartData = (): DownsoftChartData[] => {
   const countriesWithBothSex = new Set<string>();
   const countryGenderMap = new Map<string, Set<string>>();
   
-  // 성별 데이터가 모두 있는 국가만 찾기
   const filteredData = data.filter(item => 
     item.DOWNSOFT_value !== null && 
     item.SEX !== null && 
     (item.SEX === 'M' || item.SEX === 'F') &&
-    PACIFIC_COUNTRIES.includes(item.GEO_PICT)
+    PACIFIC_COUNTRIES.includes(item.GEO_PICT as PacificCountry)
   );
   
   filteredData.forEach(item => {
@@ -293,12 +409,10 @@ export const processDownsoftChartData = (): DownsoftChartData[] => {
   return Array.from(countriesWithBothSex).map(country => {
     const countryData = filteredData.filter(item => item.GEO_PICT === country);
     
-    // 남성 데이터 (최신)
     const maleData = countryData
       .filter(item => item.SEX === 'M')
       .sort((a, b) => b.TIME_PERIOD - a.TIME_PERIOD)[0];
     
-    // 여성 데이터 (최신)
     const femaleData = countryData
       .filter(item => item.SEX === 'F')
       .sort((a, b) => b.TIME_PERIOD - a.TIME_PERIOD)[0];
@@ -318,57 +432,46 @@ export const processDownsoftChartData = (): DownsoftChartData[] => {
   });
 };
 
-
-// Digital Accessibility 차트용 데이터 타입 추가
+// ===== Digital Accessibility 데이터 =====
 export interface AccessibilityChartData {
   country: string;
-  internet_usage_percentage: number; // 차트 렌더링용 (null → 0 변환)
-  broadband_subscriptions_per_100: number; // 차트 렌더링용 (null → 0 변환)
-  // 툴팁용 원본 데이터 보존
+  internet_usage_percentage: number;
+  broadband_subscriptions_per_100: number;
   original_usage_value: number | null;
   original_broadband_value: number | null;
-  // 연도 정보 추가
   usage_year: number | null;
   broadband_year: number | null;
 }
 
-// Digital Accessibility 차트용 데이터 처리 함수
 export const processAccessibilityChartData = (): AccessibilityChartData[] => {
   return PACIFIC_COUNTRIES.map(country => {
     const countryData = data.filter(
       (item: RawDataItem) => item.GEO_PICT === country
     );
     
-    // IT_USE_ii99_value (인터넷 사용률)가 있는 최신 데이터
     const usageData = countryData
       .filter(item => item.IT_USE_ii99_value !== null)
       .sort((a, b) => b.TIME_PERIOD - a.TIME_PERIOD)[0];
     
-    // IT_NET_BBND_value (고정 인터넷 구독률)가 있는 최신 데이터
     const broadbandData = countryData
       .filter(item => item.IT_NET_BBND_value !== null)
       .sort((a, b) => b.TIME_PERIOD - a.TIME_PERIOD)[0];
     
-    // 원본 값 보존
     const originalUsage = usageData?.IT_USE_ii99_value ?? null;
     const originalBroadband = broadbandData?.IT_NET_BBND_value ?? null;
     
     return {
       country,
-      // 차트 렌더링용 - null을 0으로 변환
       internet_usage_percentage: originalUsage ?? 0,
       broadband_subscriptions_per_100: originalBroadband ?? 0,
-      // 툴팁용 - 원본 값 보존
       original_usage_value: originalUsage,
       original_broadband_value: originalBroadband,
-      // 연도 정보 추가
       usage_year: usageData?.TIME_PERIOD ?? null,
       broadband_year: broadbandData?.TIME_PERIOD ?? null,
     };
   });
 };
 
-// Accessibility 차트용 막대 차트 변환 함수
 export const transformForAccessibilityBarChart = (data: AccessibilityChartData[]) => {
   return data.map(item => ({
     country: item.country,
@@ -376,12 +479,16 @@ export const transformForAccessibilityBarChart = (data: AccessibilityChartData[]
   }));
 };
 
-// Accessibility 차트용 스케일 계산 함수
-export const calculateAccessibilityScaleRatio = (data: AccessibilityChartData[]) => {
+interface AccessibilityScaleResult {
+  usageMax: number;
+  broadbandMax: number;
+  scaleRatio: number;
+}
+
+export const calculateAccessibilityScaleRatio = (data: AccessibilityChartData[]): AccessibilityScaleResult => {
   const usageMax = Math.max(...data.map(d => d.internet_usage_percentage));
   const broadbandMax = Math.max(...data.map(d => d.broadband_subscriptions_per_100));
   
-  // 0으로 나누기 방지
   const safeScaleRatio = broadbandMax > 0 ? usageMax / broadbandMax : 1;
   
   return {
@@ -389,4 +496,194 @@ export const calculateAccessibilityScaleRatio = (data: AccessibilityChartData[])
     broadbandMax: broadbandMax,
     scaleRatio: safeScaleRatio
   };
+};
+
+// ===== ICT 무역 데이터 처리 (Sunburst Chart) =====
+
+const ictTradeData: ICTTradeRawData[] = ictTradeRawData as ICTTradeRawData[];
+
+// Sunburst 차트용 데이터 처리 함수
+export const processICTTradeDataForSunburst = (
+  filters: SunburstFilterOptions = {
+    tradeFlow: 'both',
+    ictType: 'both',
+    countries: [...PACIFIC_COUNTRIES]
+  }
+): SunburstNode => {
+  const targetCountries = filters.countries || [...PACIFIC_COUNTRIES];
+  
+  // 필터링
+  const filteredData = ictTradeData.filter((item: ICTTradeRawData) => {
+    if (!item.GEO_PICT || !item.TIME_PERIOD || item.OBS_VALUE == null) {
+      return false;
+    }
+
+    const countryMatch = targetCountries.includes(item.GEO_PICT);
+    const tradeFlowMatch = filters.tradeFlow === 'both' || item.TRADE_FLOW === filters.tradeFlow;
+    const ictTypeMatch = filters.ictType === 'both' || item.ICT_PRDSRV === filters.ictType;
+    const yearMatch = !filters.yearRange || 
+      (item.TIME_PERIOD >= filters.yearRange[0] && item.TIME_PERIOD <= filters.yearRange[1]);
+    
+    return countryMatch && tradeFlowMatch && ictTypeMatch && yearMatch;
+  });
+
+  // 데이터 집계
+  const aggregatedData = new Map<string, number>();
+  
+  filteredData.forEach((item: ICTTradeRawData) => {
+    const unitMult = item.UNIT_MULT || 0;
+    const value = item.OBS_VALUE * Math.pow(10, unitMult - 6);
+    
+    // 계층 구조: 루트 > 무역흐름 > ICT타입 > 국가
+    const tradeFlowKey = item.TRADE_FLOW === 'M' ? 'Imports' : 'Exports';
+    const ictTypeKey = item.ICT_PRDSRV === 'ICTPRD' ? 'Products' : 'Services';
+    const countryKey = item.GEO_PICT;
+    
+    // 각 레벨별 집계
+    const keys = [
+      tradeFlowKey,
+      `${tradeFlowKey}.${ictTypeKey}`,
+      `${tradeFlowKey}.${ictTypeKey}.${countryKey}`
+    ];
+    
+    keys.forEach(key => {
+      aggregatedData.set(key, (aggregatedData.get(key) || 0) + value);
+    });
+  });
+
+  // Sunburst 구조 생성
+  const root: SunburstNode = {
+    id: 'ICT Trade',
+    children: []
+  };
+
+  // Level 1: 무역 흐름
+  const tradeFlows = ['Imports', 'Exports'];
+  tradeFlows.forEach(tradeFlow => {
+    if (filters.tradeFlow !== 'both' && 
+        ((filters.tradeFlow === 'M' && tradeFlow !== 'Imports') ||
+         (filters.tradeFlow === 'X' && tradeFlow !== 'Exports'))) {
+      return;
+    }
+
+    const tradeFlowValue = aggregatedData.get(tradeFlow) || 0;
+    if (tradeFlowValue === 0) return;
+
+    const tradeFlowNode: SunburstNode = {
+      id: tradeFlow,
+      value: tradeFlowValue,
+      children: []
+    };
+
+    // Level 2: ICT 타입
+    const ictTypes = ['Products', 'Services'];
+    ictTypes.forEach(ictType => {
+      if (filters.ictType !== 'both' && 
+          ((filters.ictType === 'ICTPRD' && ictType !== 'Products') ||
+           (filters.ictType === 'ICTSRV' && ictType !== 'Services'))) {
+        return;
+      }
+
+      const ictTypeKey = `${tradeFlow}.${ictType}`;
+      const ictTypeValue = aggregatedData.get(ictTypeKey) || 0;
+      if (ictTypeValue === 0) return;
+
+      const ictTypeNode: SunburstNode = {
+        id: `${tradeFlow}_${ictType}`,
+        value: ictTypeValue,
+        children: []
+      };
+
+      // Level 3: 국가
+      targetCountries.forEach(country => {
+        const countryKey = `${tradeFlow}.${ictType}.${country}`;
+        const countryValue = aggregatedData.get(countryKey) || 0;
+        if (countryValue === 0) return;
+
+        const countryNode: SunburstNode = {
+          id: `${tradeFlow}_${ictType}_${country}`,
+          value: countryValue
+        };
+
+        ictTypeNode.children!.push(countryNode);
+      });
+
+      if (ictTypeNode.children!.length > 0) {
+        tradeFlowNode.children!.push(ictTypeNode);
+      }
+    });
+
+    if (tradeFlowNode.children!.length > 0) {
+      root.children!.push(tradeFlowNode);
+    }
+  });
+
+  return root;
+};
+
+// Sunburst 차트용 색상 함수
+export const getSunburstColor = (nodeId: string): string => {
+  // Level 1: 무역 흐름
+  if (nodeId === 'Imports') return '#3b82f6'; // 파랑
+  if (nodeId === 'Exports') return '#ef4444'; // 빨강
+  
+  // Level 2: ICT 타입
+  if (nodeId.includes('Imports_Products')) return '#1d4ed8'; // 진한 파랑
+  if (nodeId.includes('Imports_Services')) return '#60a5fa'; // 밝은 파랑
+  if (nodeId.includes('Exports_Products')) return '#dc2626'; // 진한 빨강
+  if (nodeId.includes('Exports_Services')) return '#f87171'; // 밝은 빨강
+  
+  // Level 3: 국가
+  if (nodeId.includes('_')) {
+    const parts = nodeId.split('_');
+    if (parts.length >= 3) {
+      const country = parts[2];
+      const index = PACIFIC_COUNTRIES.indexOf(country as PacificCountry);
+      const hue = index >= 0 ? (index * 360) / PACIFIC_COUNTRIES.length : 0;
+      
+      if (nodeId.includes('Imports')) {
+        return `hsl(${hue}, 70%, 50%)`;
+      } else {
+        return `hsl(${hue}, 70%, 65%)`;
+      }
+    }
+  }
+  
+  return '#6b7280';
+};
+
+// 값 포맷팅 함수
+export const formatSunburstValue = (value: number): string => {
+  if (value >= 1000) {
+    return `${(value / 1000).toFixed(1)}B`;
+  } else if (value >= 1) {
+    return `${value.toFixed(1)}M`;
+  } else if (value >= 0.001) {
+    return `${(value * 1000).toFixed(1)}K`;
+  } else if (value > 0) {
+    return `${(value * 1000000).toFixed(0)}`;
+  } else {
+    return '0';
+  }
+};
+
+// 표시용 라벨 생성 함수
+export const getSunburstLabel = (nodeId: string): string => {
+  if (nodeId === 'ICT Trade') return 'ICT Trade';
+  if (nodeId === 'Imports') return 'Imports';
+  if (nodeId === 'Exports') return 'Exports';
+  
+  if (nodeId.includes('_')) {
+    const parts = nodeId.split('_');
+    
+    if (parts.length === 2) {
+      // Level 2: 무역흐름_ICT타입
+      return parts[1]; // Products 또는 Services
+    } else if (parts.length === 3) {
+      // Level 3: 무역흐름_ICT타입_국가
+      return parts[2]; // 국가 코드
+    }
+  }
+  
+  return nodeId;
 };

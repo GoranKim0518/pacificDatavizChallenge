@@ -1,6 +1,8 @@
 import ChartSection from "./ChartSection";
 import InfrastructureChartSection from "../sections/InfrastructureChartSection";
 import DownsoftChart from "../charts/DownsoftChart";
+import EducationComputerChart from "../charts/EducationComputerChart";
+import IctProdChart from "../charts/IctProdChart";
 
 const ArticleSection = () => {
   return (
@@ -126,6 +128,49 @@ const ArticleSection = () => {
             <DownsoftChart />
           </div>
 
+          {/* 디지털 리터러시 글 섹션 */}
+          <div className="prose prose-lg max-w-none" style={{ marginTop: '2rem' }}>
+            <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 mt-8 mb-8"
+                style={{ lineHeight: '32px' }}>
+              Pacific Countries' Digital Divide
+            </h2>
+
+            <p className="text-lg text-gray-700 mb-6"
+              style={{ lineHeight: '1.5' }}>
+              Pacific Small Island Developing States show 20-60% computer access rates across all education levels. 
+              Geographic isolation increases infrastructure costs, economic constraints limit resources, and 
+              ICT professional shortages create structural problems beyond simple budget issues, deepening 
+              the Pacific region's digital divide.
+            </p>
+
+            <p className="text-lg text-gray-700 mb-6"
+              style={{ lineHeight: '1.5' }}>
+              Educational constraints directly impact ICT industry development, evidenced by Pacific countries' 
+              poor ICT export performance. Limited computer access creates a cycle of declining digital literacy 
+              and professional shortages. However, as global digitalization accelerates, ICT products become 
+              increasingly important, offering Pacific nations opportunities to overcome geographic constraints 
+              through digital solutions.
+            </p>
+
+            <p className="text-lg text-gray-700"
+              style={{ lineHeight: '1.5', marginBottom: '2rem' }}>
+              Solving these challenges requires integrated approaches combining educational infrastructure expansion 
+              with ICT industry development. Key priorities include remote education platforms, regional cooperation 
+              for economies of scale, and international development programs. Comprehensive strategies linking 
+              education investment with industrial policy must establish foundations for Pacific regions to 
+              capture digital economy opportunities.
+            </p>
+          </div>
+
+          {/* 네 번째 차트 - 교육용 컴퓨터 차트 */}
+          <div className="not-prose chart-section-responsive" style={{ marginTop: '2rem' }}>
+            <EducationComputerChart />
+          </div>
+
+          {/* 다섯 번째 차트 - ICT 상품 수출·입 차트 */}
+          <div className="not-prose chart-section-responsive" style={{ marginTop: '2rem' }}>
+            <IctProdChart />
+          </div>
 
         </article>
       </div>

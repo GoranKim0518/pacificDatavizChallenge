@@ -1,54 +1,42 @@
 // types/chart.ts
-export type ChartId = 'mobile' | 'egov' | 'infrastructure' | 'accessibility';
+export type ChartId = 'mobile' | 'egov' | 'infrastructure' | 'accessibility' | 'education' | 'ictTrade';
 
-export interface ChartOption {
-  id: ChartId;
-  label: string;
+export interface SunburstNode {
+  id: string;
+  parent?: string;
+  value?: number;
+  children?: SunburstNode[];
 }
 
-// 차트 데이터 관련 타입 - chartData.ts의 ProcessedChartData와 일치
-export interface ProcessedChartData {
-  country: string;
-  population_covered_4G_percentage: number;
-  fixed_broadband_subscriptions_per_100: number;
-  original_4G_value: number | null;
-  original_broadband_value: number | null;
-  coverage_year: number | null;
-  broadband_year: number | null;
+export interface SunburstFilterOptions {
+  tradeFlow?: 'M' | 'X' | 'both';
+  ictType?: 'ICTPRD' | 'ICTSRV' | 'both';
+  countries?: string[];
+  yearRange?: [number, number];
 }
 
-export interface BarChartData {
-  country: string;
-  IT_MOB_4GNTWK_value: number;
-}
-
-export interface ScaleRatioResult {
-  mobMax: number;
-  netMax: number;
-  scaleRatio: number;
-}
-
-export interface DualAxisChartProps {
+export interface SunburstChartConfig {
   height?: number;
   width?: string | number;
+  margin?: {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+  };
+  borderWidth?: number;
+  borderColor?: string;
+  enableArcLabels?: boolean;
+  enableArcLinkLabels?: boolean;
 }
 
-export interface AccessibilityChartData {
-  country: string;
-  internet_usage_percentage: number;
-  broadband_subscriptions_per_100: number;
-  original_usage_value: number | null;
-  original_broadband_value: number | null;
-  usage_year: number | null;
-  broadband_year: number | null;
-}
-
-export interface DownsoftChartData {
-  country: string;
-  male: number;
-  female: number;
-  original_male_value: number | null;
-  original_female_value: number | null;
-  male_year: number | null;
-  female_year: number | null;
+export interface ICTTradeRawData {
+  GEO_PICT: string;
+  TIME_PERIOD: number;
+  TRADE_FLOW: 'M' | 'X';
+  ICT_PRDSRV: 'ICTPRD' | 'ICTSRV';
+  OBS_VALUE: number;
+  UNIT_MULT: number;
+  OBS_STATUS?: string;
+  UNIT_MEASURE?: string;
 }
