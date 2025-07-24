@@ -44,14 +44,19 @@ const Mob4gntwkDualAxisChart = ({
 }: DualAxisChartProps) => {
   const chartRef = useRef<ChartJS<'bar' | 'line', number[], string> | null>(null);
 
+  // ✅ 수정: 모든 필수 속성을 포함하여 완전한 ProcessedChartData 객체 생성
   const processedData = useMemo<ProcessedChartData[]>(() => {
     const rawData = processChartData();
     return rawData.map(item => ({
       country: item.country,
+      // 기존 속성들 유지
       original_4G_value: item.population_covered_4G_percentage || item.original_4G_value,
       original_broadband_value: item.fixed_broadband_subscriptions_per_100 || item.original_broadband_value,
       coverage_year: item.coverage_year,
       broadband_year: item.broadband_year,
+      // ✅ 누락된 필수 속성들 추가
+      population_covered_4G_percentage: item.population_covered_4G_percentage,
+      fixed_broadband_subscriptions_per_100: item.fixed_broadband_subscriptions_per_100,
     }));
   }, []);
 
@@ -99,7 +104,6 @@ const Mob4gntwkDualAxisChart = ({
     };
   }, [barData, processedData]);
 
-  // ✅ 완전한 options 구현
   const options = useMemo<ChartOptions<'bar' | 'line'>>(() => ({
     responsive: true,
     maintainAspectRatio: false,
@@ -168,7 +172,6 @@ const Mob4gntwkDualAxisChart = ({
         },
       },
     },
-    // ✅ 누락된 scales 설정 추가
     scales: {
       x: {
         display: true,
@@ -229,7 +232,6 @@ const Mob4gntwkDualAxisChart = ({
         },
       },
     },
-    // ✅ 누락된 elements 설정 추가
     elements: {
       line: {
         tension: 0,
@@ -239,7 +241,6 @@ const Mob4gntwkDualAxisChart = ({
         hoverRadius: 3,
       },
     },
-    // ✅ 누락된 onHover 설정 추가
     onHover: (event: ChartEvent, activeElements: any[]) => {
       const target = event.native?.target as HTMLElement;
       if (target) {

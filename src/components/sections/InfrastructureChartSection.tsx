@@ -22,23 +22,37 @@ const InfrastructureChartSection = () => {
       />
       
       <div className="bg-white border border-gray-300 p-6 overflow-hidden mb-12" 
-           style={{ marginTop: '1.5rem' }}>
+           style={{ marginTop: '1.5rem', minHeight: '500px' }}>
         {selectedChart2 === 'infrastructure' && (
           <div>
-            <div className="w-full overflow-hidden">
-              <Mob4gntwkDualAxisChart />
+            <div style={{ 
+              width: '100%', 
+              height: '450px',
+              position: 'relative'
+            }}>
+              <Mob4gntwkDualAxisChart height={400} />
             </div>
           </div>
         )}
 
         {selectedChart2 === 'accessibility' && (
           <div>
-            <div className="w-full overflow-hidden">
-              <DigitalAccessibilityChart />
+            <div style={{ 
+              width: '100%', 
+              height: '450px',
+              position: 'relative'
+            }}>
+              <DigitalAccessibilityChart height={400} />
             </div>
           </div>
         )}
         
+        {/* 기본 선택값 설정 */}
+        {!selectedChart2 && (
+          <div style={{ textAlign: 'center', padding: '50px' }}>
+            <p>차트를 선택해주세요.</p>
+          </div>
+        )}
       </div>
     </div>
   );

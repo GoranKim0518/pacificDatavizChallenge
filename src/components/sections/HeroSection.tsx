@@ -16,12 +16,12 @@ const HeroSection = () => {
     <section className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center py-8">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center">
-          {/* Report Title - 정확한 IBM Carbon Typography */}
-          <div className="w-full max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl xl:max-w-2xl 2xl:max-w-4xl mb-8 sm:mb-10 md:mb-12 lg:mb-10 xl:mb-16">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-5 text-left mb-4 sm:mb-5 md:mb-6 lg:mb-8 xl:mb-10">
+          {/* Report Title - 행간과 여백 조정 */}
+          <div className="w-full max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl xl:max-w-2xl 2xl:max-w-4xl mb-6 sm:mb-8 md:mb-10 lg:mb-10 xl:mb-12">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight text-left mb-4 sm:mb-5 md:mb-6 lg:mb-7 xl:mb-8">
               Pacific's Tech-Future
             </h1>
-            <h2 className="text-base sm:text-lg md:text-xl lg:text-lg xl:text-xl text-gray-600 font-light leading-6 text-left">
+            <h2 className="text-base sm:text-lg md:text-xl lg:text-lg xl:text-xl text-gray-600 font-light leading-normal text-left">
               While access to basic IT devices is improving across most Pacific nations, their digital infrastructure still needs significant improvement. This report examines IT infrastructure development, highlighting gaps in digital connectivity and suggesting future directions.
             </h2>
           </div>
@@ -48,7 +48,7 @@ const HeroSection = () => {
               </div>
             ) : (
               <div className="w-full">
-                <div className="aspect-[3/2] w-full bg-white  shadow-lg sm:shadow-xl lg:shadow-2xl flex flex-col items-center justify-center border-none stroke-trasnparent">
+                <div className="aspect-[3/2] w-full bg-white shadow-lg sm:shadow-xl lg:shadow-2xl flex flex-col items-center justify-center border-none stroke-transparent">
                   <div className="text-center p-4 sm:p-6 md:p-6 lg:p-6 xl:p-12">
                     <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-14 lg:h-14 xl:w-24 xl:h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 md:mb-4 lg:mb-3 xl:mb-6">
                       <svg className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 lg:w-7 lg:h-7 xl:w-12 xl:h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

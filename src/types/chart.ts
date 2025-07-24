@@ -1,6 +1,7 @@
 // types/chart.ts
 export type ChartId = 'mobile' | 'egov' | 'infrastructure' | 'accessibility' | 'education' | 'ictTrade';
 
+// Sunburst 차트 관련 타입들
 export interface SunburstNode {
   id: string;
   parent?: string;
@@ -30,6 +31,7 @@ export interface SunburstChartConfig {
   enableArcLinkLabels?: boolean;
 }
 
+// ICT Trade 관련 타입
 export interface ICTTradeRawData {
   GEO_PICT: string;
   TIME_PERIOD: number;
@@ -80,9 +82,11 @@ export interface ChartOption {
   label: string;
 }
 
-// Chart.js 듀얼 축 차트용 처리된 데이터 타입
+// ✅ 수정: data/chartData.ts와 일치하는 ProcessedChartData
 export interface ProcessedChartData {
   country: string;
+  population_covered_4G_percentage: number;
+  fixed_broadband_subscriptions_per_100: number;
   original_4G_value: number | null;
   original_broadband_value: number | null;
   coverage_year: number | null;
@@ -101,13 +105,13 @@ export interface DualAxisChartProps {
   width?: string;
 }
 
-// Nivo 바 차트용 데이터 포인트 (인덱스 시그니처 포함)
+// ✅ 수정: data/chartData.ts와 일치하는 BarChartDataPoint (Nivo 호환)
 export interface BarChartDataPoint {
   country: string;
   value: number;
-  countryCode?: string;
-  year?: number;
-  [key: string]: any;
+  countryCode: string;
+  year: number;
+  [key: string]: any; // Nivo BarDatum 호환성을 위한 필수 인덱스 시그니처
 }
 
 // Nivo 계산된 바 데이터 타입
@@ -127,9 +131,10 @@ export interface BarCustomLayerProps<T> {
   yScale: any;
 }
 
-// ✅ Digital Accessibility Chart용 데이터 타입 (새로 추가)
+// ✅ 수정: data/chartData.ts와 일치하는 AccessibilityChartData
 export interface AccessibilityChartData {
   country: string;
+  internet_usage_percentage: number;
   broadband_subscriptions_per_100: number;
   original_usage_value: number | null;
   original_broadband_value: number | null;
@@ -137,8 +142,81 @@ export interface AccessibilityChartData {
   broadband_year: number | null;
 }
 
-// ✅ Accessibility Bar Chart용 변환된 데이터 타입 (새로 추가)
+// Accessibility Bar Chart용 변환된 데이터 타입
 export interface AccessibilityBarChartData {
   country: string;
   IT_USE_ii99_value: number;
+}
+
+// 추가 유틸리티 타입들
+export interface CustomLayerProps {
+  xScale: any;
+  yScale: any;
+  [key: string]: any;
+}
+
+export interface BaseChartData {
+  country: string;
+  [key: string]: any;
+}
+
+export interface FlexibleProcessedChartData extends BaseChartData {
+  coverage_year?: number | null;
+  broadband_year?: number | null;
+}
+
+// ✅ 새로 추가: Chart.js 변환용 타입
+export interface BarChartItem {
+  country: string;
+  IT_MOB_4GNTWK_value: number;
+}
+
+export interface LineChartData {
+  id: string;
+  data: { x: string; y: number }[];
+}
+
+export interface ScaleRatioResult {
+  mobMax: number;
+  netMax: number;
+  scaleRatio: number;
+}
+
+// ✅ 새로 추가: Scatter Plot 관련 타입
+export interface ScatterPlotDataPoint {
+  x: string;
+  y: number;
+  country: string;
+  sex: string;
+  year: number;
+}
+
+export interface ScatterPlotData {
+  id: string;
+  data: ScatterPlotDataPoint[];
+}
+
+// ✅ 새로 추가: Education 관련 타입
+export interface ProcessedEducationData {
+  value: number | null;
+  year: number;
+  source: string;
+}
+
+export interface EducationComputerRawData {
+  INDICATOR: string;
+  GEO_PICT: string;
+  COMPOSITE_BREAKDOWN: string;
+  TIME_PERIOD: number;
+  OBS_VALUE: number | null;
+  UNIT_MEASURE: string;
+  REPORTING_TYPE: string;
+  DATA_SOURCE: string;
+}
+
+// ✅ 새로 추가: Accessibility 관련 스케일 타입
+export interface AccessibilityScaleResult {
+  usageMax: number;
+  broadbandMax: number;
+  scaleRatio: number;
 }
