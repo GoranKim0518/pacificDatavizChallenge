@@ -24,9 +24,6 @@ const ChartSection = () => {
       <div className="bg-white border border-gray-300 p-6 overflow-hidden mb-16 mt-6">
         {selectedChart1 === 'mobile' && (
           <div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-8 text-center">
-              Mobile Phone Ownership by Gender
-            </h3>
             <div className="h-96 w-full overflow-hidden">
               <MobOwnSctPlt />
             </div>
