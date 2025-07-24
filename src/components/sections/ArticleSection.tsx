@@ -33,7 +33,7 @@ const ArticleSection = () => {
               Their E-Government Index (EGI) scores show respectable performance. Although Papua New 
               Guinea shows a lower EGI of 0.32, other countries perform well with an average of 0.43. 
               According to the UN E-Government Survey 2024, while this is below the global average 
-              of 0.6382—which includes many developed nations—it represents a solid middle-tier 
+              of 0.64—which includes many high-income countries—it represents a solid middle-tier 
               performance for Small Island Developing States (SIDS).
             </p>
 
@@ -97,7 +97,7 @@ const ArticleSection = () => {
             <p className="text-lg text-gray-700 mb-6"
               style={{ lineHeight: '1.5' }}>
               The Pacific region demonstrates a notable gap between educational technology 
-              infrastructure and actual digital competency. While most Pacific nations including Fiji, 
+              infrastructure and actual digital competency. While most Pacific region including Fiji, 
               Tuvalu, and Vanuatu have achieved impressive 4G network coverage rates exceeding 95%, 
               since software is typically managed in fixed network environments, this mobile connectivity 
               success does not translate into correspondingly high digital literacy rates.

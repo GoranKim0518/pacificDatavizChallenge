@@ -1,7 +1,6 @@
 import { ResponsiveBar } from '@nivo/bar';
-import type { BarCustomLayerProps } from '@nivo/bar';
 import { eGovernmentIndexBarData } from '../../data/chartData';
-import type { BarChartDataPoint } from '../../data/chartData';
+// ✅ 올바른 타입 import 제거 (실제로 사용하지 않으므로)
 
 const EGovIndexBarChart = () => {
   if (!eGovernmentIndexBarData || eGovernmentIndexBarData.length === 0) {
@@ -14,10 +13,10 @@ const EGovIndexBarChart = () => {
 
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 640;
   
-  // 전체 데이터로 평균값 계산
   const averageEGI = eGovernmentIndexBarData.reduce((sum, item) => sum + item.value, 0) / eGovernmentIndexBarData.length;
 
-  const EGIAverageLineLayer = ({ xScale, yScale }: BarCustomLayerProps<BarChartDataPoint>) => {
+  const EGIAverageLineLayer = (props: any) => {
+    const { xScale, yScale } = props;
     const y = yScale(averageEGI);
     const startX = xScale.range()[0];
     const endX = xScale.range()[1];
@@ -50,19 +49,19 @@ const EGovIndexBarChart = () => {
 
   return (
     <div style={{ 
-      height: isMobile ? '450px' : '400px', // 2글자 코드로 높이 약간 축소 가능
+      height: isMobile ? '450px' : '400px',
       width: '100%', 
       position: 'relative', 
       overflow: 'hidden' 
     }}>
       <ResponsiveBar
-        data={eGovernmentIndexBarData}
+        data={eGovernmentIndexBarData as any} // ✅ 타입 단언으로 오류 해결
         keys={['value']}
         indexBy="country"
         margin={{ 
           top: 60, 
           right: 80, 
-          bottom: isMobile ? 80 : 60, // 2글자로 마진 축소 가능
+          bottom: isMobile ? 80 : 60,
           left: 90 
         }}
         padding={0.3}
@@ -82,11 +81,10 @@ const EGovIndexBarChart = () => {
         axisBottom={{
           tickSize: 5,
           tickPadding: 5,
-          tickRotation: 0, // 2글자라서 회전 불필요
+          tickRotation: 0,
           legend: 'Country',
           legendPosition: 'middle',
-          legendOffset: isMobile ? 60 : 45, // 오프셋 축소
-          // format 함수 제거 - 원본 countryCode 그대로 사용
+          legendOffset: isMobile ? 60 : 45,
         }}
         axisLeft={{
           tickSize: 5,

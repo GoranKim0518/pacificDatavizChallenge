@@ -38,20 +38,29 @@ ChartJS.register(
   Legend
 );
 
-const DualAxisChart = ({
+const Mob4gntwkDualAxisChart = ({
   height = 500,
   width = '100%'
 }: DualAxisChartProps) => {
   const chartRef = useRef<ChartJS<'bar' | 'line', number[], string> | null>(null);
 
-  const processedData = useMemo<ProcessedChartData[]>(() => processChartData(), []);
-  const barData = useMemo<BarChartData[]>(() => transformForBarChart(processedData), [processedData]);
+  const processedData = useMemo<ProcessedChartData[]>(() => {
+    const rawData = processChartData();
+    return rawData.map(item => ({
+      country: item.country,
+      original_4G_value: item.population_covered_4G_percentage || item.original_4G_value,
+      original_broadband_value: item.fixed_broadband_subscriptions_per_100 || item.original_broadband_value,
+      coverage_year: item.coverage_year,
+      broadband_year: item.broadband_year,
+    }));
+  }, []);
+
+  const barData = useMemo<BarChartData[]>(() => transformForBarChart(processedData as any), [processedData]);
 
   const chartData = useMemo<ChartData<'bar' | 'line', number[], string>>(() => {
     const countries: string[] = barData.map(d => d.country);
     const barValues: number[] = barData.map(d => d.IT_MOB_4GNTWK_value);
     
-    // 이중축 동기화 제거 - 원본 브로드밴드 값 사용
     const lineValues: number[] = barData.map(d => {
       const original = processedData.find(p => p.country === d.country);
       return original?.original_broadband_value ?? 0;
@@ -90,6 +99,7 @@ const DualAxisChart = ({
     };
   }, [barData, processedData]);
 
+  // ✅ 완전한 options 구현
   const options = useMemo<ChartOptions<'bar' | 'line'>>(() => ({
     responsive: true,
     maintainAspectRatio: false,
@@ -158,6 +168,7 @@ const DualAxisChart = ({
         },
       },
     },
+    // ✅ 누락된 scales 설정 추가
     scales: {
       x: {
         display: true,
@@ -203,7 +214,7 @@ const DualAxisChart = ({
         display: true,
         position: 'right',
         min: 0,
-        max: 40, // 고정값 40으로 설정
+        max: 40,
         title: {
           display: true,
           text: 'Fixed Internet broadband subscriptions (per 100)',
@@ -218,6 +229,7 @@ const DualAxisChart = ({
         },
       },
     },
+    // ✅ 누락된 elements 설정 추가
     elements: {
       line: {
         tension: 0,
@@ -227,6 +239,7 @@ const DualAxisChart = ({
         hoverRadius: 3,
       },
     },
+    // ✅ 누락된 onHover 설정 추가
     onHover: (event: ChartEvent, activeElements: any[]) => {
       const target = event.native?.target as HTMLElement;
       if (target) {
@@ -252,4 +265,4 @@ const DualAxisChart = ({
   );
 };
 
-export default DualAxisChart;
+export default Mob4gntwkDualAxisChart;

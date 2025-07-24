@@ -30,9 +30,6 @@ const Downsoft = () => {
   return (
     <div className="bg-white border border-gray-300 p-6 overflow-hidden mb-16 mt-6">
       <div>
-        <h3 className="text-xl font-semibold text-gray-900 mb-8 text-center">
-          Infrastructure vs Digital Literacy
-        </h3>
         <div className="h-96 w-full overflow-hidden">
           <ResponsiveBar
             data={chartData}

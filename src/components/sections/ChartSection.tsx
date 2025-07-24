@@ -32,9 +32,6 @@ const ChartSection = () => {
         
         {selectedChart1 === 'egov' && (
           <div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-8 text-center">
-              E-Government Index
-            </h3>
             <div className="w-full overflow-hidden">
               <EGovIndexBarChart />
             </div>

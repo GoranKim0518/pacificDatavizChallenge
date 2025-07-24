@@ -25,9 +25,6 @@ const InfrastructureChartSection = () => {
            style={{ marginTop: '1.5rem' }}>
         {selectedChart2 === 'infrastructure' && (
           <div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-6 text-center">
-              Digital Infrastructure Utilization
-            </h3>
             <div className="w-full overflow-hidden">
               <Mob4gntwkDualAxisChart />
             </div>
@@ -36,9 +33,6 @@ const InfrastructureChartSection = () => {
 
         {selectedChart2 === 'accessibility' && (
           <div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-6 text-center">
-              Digital Accessibility Index
-            </h3>
             <div className="w-full overflow-hidden">
               <DigitalAccessibilityChart />
             </div>

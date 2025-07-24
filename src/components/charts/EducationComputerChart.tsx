@@ -228,10 +228,6 @@ const EducationComputerChart = () => {
 
   return (
     <div className="bg-white border border-gray-300 p-6 mb-16 mt-6">
-      <h3 className="text-xl font-semibold text-center mb-8">
-        Educational Computer Access: Regional Overview
-      </h3>
-
       <div
         className={`w-full overflow-hidden ${containerH} relative`}
         style={{ outline: 'none', WebkitTapHighlightColor: 'transparent' }}

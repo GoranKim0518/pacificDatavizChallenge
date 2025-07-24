@@ -44,7 +44,7 @@ const DigitalAccessibilityChart: React.FC<DualAxisChartProps> = ({
   const chartRef = useRef<ChartJS<'bar' | 'line', number[], string> | null>(null);
 
   const processedData = useMemo<AccessibilityChartData[]>(() => processAccessibilityChartData(), []);
-  const barData = useMemo(() => transformForAccessibilityBarChart(processedData), [processedData]);
+  const barData = useMemo(() => transformForAccessibilityBarChart(processedData as any), [processedData]);
   
   const maxBroadbandValue = useMemo(() => {
     return Math.max(...processedData.map(d => d.broadband_subscriptions_per_100));
