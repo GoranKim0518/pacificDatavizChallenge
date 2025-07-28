@@ -17,10 +17,24 @@ interface ICTTradeChartState {
   yearRange?: [number, number];
 }
 
+interface PacificIslandsState {
+  activeIsland: string | null;
+  connectedIslands: string[];
+  visitedSections: string[];
+  isAnimating: boolean;
+  completionStatus: 'incomplete' | 'complete';
+}
+
 interface AppState {
-  customImageUrl: string;
-  setCustomImage: (url: string) => void;
+  // 태평양 섬 내비게이션 상태
+  pacificIslands: PacificIslandsState;
+  setActiveIsland: (island: string | null) => void;
+  addConnectedIsland: (island: string) => void;
+  setVisitedSections: (sections: string[]) => void;
+  setIsAnimating: (animating: boolean) => void;
+  resetPacificIslands: () => void;
   
+  // 차트 선택 상태
   selectedChart1: 'mobile' | 'egov' | null;
   setSelectedChart1: (chart: 'mobile' | 'egov' | null) => void;
   
@@ -30,6 +44,7 @@ interface AppState {
   selectedChart3: 'ictTrade' | 'education' | null;
   setSelectedChart3: (chart: 'ictTrade' | 'education' | null) => void;
   
+  // ICT 트레이드 차트 상태
   ictTradeChart: ICTTradeChartState;
   setTradeFlow: (flow: 'both' | 'M' | 'X') => void;
   setIctType: (type: 'both' | 'ICTPRD' | 'ICTSRV') => void;
@@ -37,6 +52,7 @@ interface AppState {
   setYearRange: (range: [number, number] | undefined) => void;
   resetICTTradeFilters: () => void;
   
+  // 인터랙션 상태
   clickedPoint: ClickedPoint | null;
   setClickedPoint: (point: ClickedPoint | null) => void;
   clearClickedPoint: () => void;
@@ -46,9 +62,65 @@ interface AppState {
 }
 
 export const useAppStore = create<AppState>((set) => ({
-  customImageUrl: '',
-  setCustomImage: (url: string) => set({ customImageUrl: url }),
+  // 태평양 섬 내비게이션 초기 상태
+  pacificIslands: {
+    activeIsland: null,
+    connectedIslands: [],
+    visitedSections: [],
+    isAnimating: false,
+    completionStatus: 'incomplete'
+  },
   
+  setActiveIsland: (island) => set((state) => ({
+    pacificIslands: { ...state.pacificIslands, activeIsland: island }
+  })),
+  
+  addConnectedIsland: (island) => set((state) => {
+    const newConnectedIslands = [...state.pacificIslands.connectedIslands];
+    if (!newConnectedIslands.includes(island)) {
+      newConnectedIslands.push(island);
+    }
+    
+    const newVisitedSections = [...state.pacificIslands.visitedSections];
+    if (!newVisitedSections.includes(island)) {
+      newVisitedSections.push(island);
+    }
+    
+    const completionStatus = newVisitedSections.length === 4 ? 'complete' : 'incomplete';
+    
+    return {
+      pacificIslands: {
+        ...state.pacificIslands,
+        connectedIslands: newConnectedIslands,
+        visitedSections: newVisitedSections,
+        completionStatus
+      }
+    };
+  }),
+  
+  setVisitedSections: (sections) => set((state) => ({
+    pacificIslands: { 
+      ...state.pacificIslands, 
+      visitedSections: sections,
+      completionStatus: sections.length === 4 ? 'complete' : 'incomplete'
+    }
+  })),
+  
+  setIsAnimating: (animating) => set((state) => ({
+    pacificIslands: { ...state.pacificIslands, isAnimating: animating }
+  })),
+  
+  resetPacificIslands: () => set(() => ({
+    pacificIslands: {
+      activeIsland: null,
+      connectedIslands: [],
+      visitedSections: [],
+      isAnimating: false,
+      completionStatus: 'incomplete'
+    }
+  })),
+  
+  // 기존 상태들 유지
   selectedChart1: 'mobile',
   setSelectedChart1: (chart) => set({ selectedChart1: chart }),
   
