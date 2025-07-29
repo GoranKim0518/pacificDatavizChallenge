@@ -1,4 +1,5 @@
 import IslandSection from "../ui/islandSection"
+import BinaryWaveBackground from "../ui/waveBackground"
 
 const HeroSection = () => {
   return (
@@ -19,6 +20,11 @@ const HeroSection = () => {
           </div>
         </div>
         <IslandSection />
+        <div className="mt-12 w-full flex justify-center">
+          <div className="w-full max-w-[1560px] h-[1024px] relative">
+            <BinaryWaveBackground />
+          </div>
+        </div>
       </div>
     </section>
   );
