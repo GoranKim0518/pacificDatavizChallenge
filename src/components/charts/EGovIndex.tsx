@@ -78,22 +78,6 @@ const EGovIndexBarChart = () => {
         
         axisTop={null}
         axisRight={null}
-        axisBottom={{
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          legend: 'Country',
-          legendPosition: 'middle',
-          legendOffset: isMobile ? 60 : 45,
-        }}
-        axisLeft={{
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          legend: 'E-Government Index',
-          legendPosition: 'middle',
-          legendOffset: -60
-        }}
         
         labelSkipWidth={12}
         labelSkipHeight={12}
