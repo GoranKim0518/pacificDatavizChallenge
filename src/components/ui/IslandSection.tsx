@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useAppStore } from '../../stores/useAppstore';
-import '../../styles/center-island.css';
+import '../../styles/floating-button.css';
 
 interface Island {
   id: number;
@@ -11,7 +11,7 @@ interface Island {
   path: string;
 }
 
-const IslandSection: React.FC = () => {
+const IslandSection = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [showCompleteBridge, setShowCompleteBridge] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
