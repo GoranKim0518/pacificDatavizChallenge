@@ -8,7 +8,9 @@ const ChartSelector = () => {
     { id: 'egov', label: 'E-Government Index' }
   ];
 
-  return <ChartButtonGroup options={chartOptions} />;
+  return <ChartButtonGroup options={chartOptions} selectedChart={null} setSelectedChart={function (): void {
+    throw new Error('Function not implemented.');
+  } } />;
 };
 
 export default ChartSelector;

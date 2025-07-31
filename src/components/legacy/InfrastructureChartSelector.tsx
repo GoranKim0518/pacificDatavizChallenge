@@ -8,7 +8,9 @@ const InfrastructureChartSelector = () => {
     { id: 'accessibility', label: 'Digital Accessibility' }
   ];
 
-  return <ChartButtonGroup options={chartOptions} />;
+  return <ChartButtonGroup options={chartOptions} selectedChart={null} setSelectedChart={function (): void {
+    throw new Error('Function not implemented.');
+  } } />;
 };
 
 export default InfrastructureChartSelector;
