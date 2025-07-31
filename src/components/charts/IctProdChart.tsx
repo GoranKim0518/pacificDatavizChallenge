@@ -147,22 +147,6 @@ export default function ICTSunburstChart({
     ictTradeChart.yearRange,
   ]);
 
-  const currentSelectionLabel = useMemo(() => {
-    const tradeLabel =
-      ictTradeChart.tradeFlow === 'both' ? 'All Trade'
-        : ictTradeChart.tradeFlow === 'M' ? 'Imports Only'
-        : 'Exports Only';
-    const typeLabel =
-      ictTradeChart.ictType === 'both' ? 'All ICT'
-        : ictTradeChart.ictType === 'ICTPRD' ? 'Products Only'
-        : 'Services Only';
-    const countryCount = ictTradeChart.selectedCountries.length || PACIFIC_COUNTRIES.length;
-    return { tradeLabel, typeLabel, countryCount };
-  }, [
-    ictTradeChart.tradeFlow,
-    ictTradeChart.ictType,
-    ictTradeChart.selectedCountries.length,
-  ]);
 
   const handleTradeFlowChange = useCallback(
     (val: 'both' | 'M' | 'X') => setTradeFlow(val),
