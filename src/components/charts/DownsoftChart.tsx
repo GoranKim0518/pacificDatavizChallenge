@@ -1,157 +1,163 @@
 import { useMemo } from 'react';
-import { ResponsiveBar } from '@nivo/bar';
+import { Bar } from 'react-chartjs-2';
 import { processDownsoftChartData } from '../../data/chartData';
 import type { DownsoftChartData } from '../../types/chart';
+import type { ChartData, ChartOptions, TooltipItem } from 'chart.js';
 
-const Downsoft = () => {
+export default function Downsoft() {
   const processedData = useMemo<DownsoftChartData[]>(() => processDownsoftChartData(), []);
 
-  const chartData = useMemo(() => {
-    return processedData.map(item => ({
-      country: item.country,
-      male: item.male,
-      female: item.female,
-    }));
-  }, [processedData]);
+  const chartData = useMemo<ChartData<'bar'>>(() => ({
+    labels: processedData.map(item => item.country),
+    datasets: [
+      {
+        label: 'Male',
+        data: processedData.map(item => item.male),
+        backgroundColor: '#f47560',
+        barPercentage: 0.88,
+        categoryPercentage: 0.88,
+      },
+      {
+        label: 'Female',
+        data: processedData.map(item => item.female),
+        backgroundColor: '#e8c547',
+        barPercentage: 0.88,
+        categoryPercentage: 0.88,
+      },
+    ],
+  }), [processedData]);
 
-  const tooltipData = useMemo(() => {
-    const dataMap = new Map();
-    processedData.forEach(item => {
-      dataMap.set(item.country, {
-        original_male_value: item.original_male_value,
-        original_female_value: item.original_female_value,
-        male_year: item.male_year,
-        female_year: item.female_year,
-      });
-    });
-    return dataMap;
-  }, [processedData]);
+  const options = useMemo<ChartOptions<'bar'>>(() => ({
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'bottom',
+        align: 'center',
+        labels: {
+          boxWidth: 12,
+          boxHeight: 12,
+          padding: 25,
+          font: { size: 12 },
+          color: '#222',
+        },
+      },
+      tooltip: {
+        enabled: true,
+        backgroundColor: '#fff',
+        titleColor: '#222',
+        bodyColor: '#222',
+        borderColor: '#e0e0e0',
+        borderWidth: 1,
+        cornerRadius: 0,
+        displayColors: true,
+        padding: 12,
+        boxPadding: 6,
+        titleFont: { size: 14, weight: 'bold' as const },
+        bodyFont: { size: 12 },
+        callbacks: {
+          title: (tooltipItems: TooltipItem<'bar'>[]) => tooltipItems[0].label ?? '',
+          label: (context: TooltipItem<'bar'>) => {
+            const i = context.dataIndex;
+            const d = processedData[i];
+            const idx = context.datasetIndex ?? 0;
+            if (!d) return '';
+            if (idx === 0) {
+              return `Male: ${d.original_male_value !== null ? d.original_male_value + '%' : 'No data'}`;
+            }
+            if (idx === 1) {
+              return `Female: ${d.original_female_value !== null ? d.original_female_value + '%' : 'No data'}`;
+            }
+            return '';
+          },
+          afterLabel: (context: TooltipItem<'bar'>) => {
+            const i = context.dataIndex;
+            const d = processedData[i];
+            const idx = context.datasetIndex ?? 0;
+            return `Year: ${idx === 0 ? (d.male_year ?? 'N/A') : (d.female_year ?? 'N/A')}`;
+          },
+          labelColor: (context: TooltipItem<'bar'>) => ({
+            borderColor: context.datasetIndex === 0 ? '#f47560' : '#e8c547',
+            backgroundColor: context.datasetIndex === 0 ? '#f47560' : '#e8c547',
+          }),
+        },
+      }
+    },
+    scales: {
+      x: {
+        title: { display: false },
+        grid: { display: false },
+        ticks: {
+          display: true,
+          maxRotation: 0,
+          minRotation: 0,
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Software Download Skills (%)',
+          font: { size: 12 },
+        },
+        grid: { color: '#e0e0e0' },
+        beginAtZero: true,
+        max: 100
+      }
+    },
+    layout: {
+      padding: {
+        top: 30,
+        bottom: 30,
+        left: 24,
+        right: 32,
+      },
+    }
+  }), [processedData]);
 
   return (
-    <div className="bg-white border border-gray-300 p-6 overflow-hidden mb-16 mt-6">
-      <div>
-        <div className="h-96 w-full overflow-hidden">
-          <ResponsiveBar
-            data={chartData}
-            keys={['male', 'female']}
-            indexBy="country"
-            groupMode="grouped"
-            colors={['#f47560', '#e8c547']}
-            margin={{ top: 30, right: 130, bottom: 50, left: 60 }}
-            padding={0.3}
-            valueScale={{ type: 'linear' }}
-            indexScale={{ type: 'band', round: true }}
-            borderColor={{
-              from: 'color',
-              modifiers: [['darker', 1.6]]
-            }}
-            axisTop={null}
-            axisRight={null}
-            axisBottom={{
-              tickSize: 5,
-              tickPadding: 5,
-              tickRotation: -45,
-              legend: 'Country',
-              legendPosition: 'middle',
-              legendOffset: 45,
-            }}
-            axisLeft={{
-              tickSize: 5,
-              tickPadding: 5,
-              tickRotation: 0,
-              legend: 'Software Download Skills (%)',
-              legendPosition: 'middle',
-              legendOffset: -40,
-            }}
-            labelSkipWidth={12}
-            labelSkipHeight={12}
-            labelTextColor={{
-              from: 'color',
-              modifiers: [['darker', 1.6]]
-            }}
-            legends={[
-              {
-                dataFrom: 'keys',
-                anchor: 'bottom-right',
-                direction: 'column',
-                justify: false,
-                translateX: 120,
-                translateY: 0,
-                itemsSpacing: 2,
-                itemWidth: 100,
-                itemHeight: 20,
-                itemDirection: 'left-to-right',
-                itemOpacity: 0.85,
-                symbolSize: 20,
-                effects: [
-                  {
-                    on: 'hover',
-                    style: {
-                      itemOpacity: 1
-                    }
-                  }
-                ]
-              }
-            ]}
-            tooltip={({ id, color, indexValue }) => {
-              const genderKey = id as 'male' | 'female';
-              const countryData = tooltipData.get(indexValue);
-              
-              if (!countryData) return null;
-              
-              const originalValue = genderKey === 'male' 
-                ? countryData.original_male_value 
-                : countryData.original_female_value;
-              const year = genderKey === 'male' 
-                ? countryData.male_year 
-                : countryData.female_year;
-              const genderLabel = genderKey === 'male' ? 'Male' : 'Female';
-              
-              return (
-                <div style={{
-                  background: '#fff',
-                  color: '#222',
-                  padding: '12px 16px',
-                  border: '1px solid #e0e0e0',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                  minWidth: '180px',
-                  lineHeight: '1.5',
-                  zIndex: 9999,
-                  position: 'relative'
-                }}>
-                  <div style={{ 
-                    fontWeight: 'bold', 
-                    fontSize: '16px', 
-                    marginBottom: '8px', 
-                    color: '#222' 
-                  }}>
-                    {indexValue}
-                  </div>
-                  <div style={{ 
-                    color: color, 
-                    fontSize: '15px',
-                    fontWeight: 600,
-                    marginBottom: '4px'
-                  }}>
-                    {genderLabel}: {originalValue !== null ? `${originalValue}%` : 'No data'}
-                  </div>
-                  <div style={{ 
-                    color: '#666', 
-                    fontSize: '13px' 
-                  }}>
-                    Year: {year ?? 'N/A'}
-                  </div>
-                </div>
-              );
-            }}
-            animate={true}
-            motionConfig={'gentle'}
-          />
-        </div>
+    <div
+      className="bg-white border border-gray-300 p-6 overflow-hidden mb-12"
+      style={{
+        marginTop: '1.5rem',
+        minHeight: 500,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
+    >
+      <div style={{
+        width: '100%',
+        height: 450,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingBottom: -10,
+      }}>
+        <Bar data={chartData} options={options} />
+      </div>
+      {/* 카드 내부 하단(border 바로 위)에 출처 추가 */}
+      <div
+        className="text-xs text-gray-600 text-left"
+        style={{
+          fontFamily: 'inherit',
+          marginTop: 18,
+          marginBottom: 0,
+        }}
+      >
+        <strong>Source:</strong> Software download skills by country (
+        <a
+          href="https://stats.pacificdata.org/vis?lc=en&df[ds]=SPC2&df[id]=DF_BP50&df[ag]=SPC&df[vs]=1.0&av=true&lo=1&lom=LASTNOBSERVATIONS&dq=A.DOWNSOFT.CK+FJ+FM+KI+MH+NC+NR+NU+PF+PG+PW+SB+TO+TV+VU+WS.F+M.Y15T49._T._T._T._T._Z._T&to[TIME_PERIOD]=false&ly[rs]=INDICATOR&ly[rw]=GEO_PICT%2CTIME_PERIOD&pd=,"
+          style={{ color: '#2563eb', textDecoration: 'underline' }}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          link
+        </a>
+        )
       </div>
     </div>
   );
-};
-
-export default Downsoft;
+}

@@ -44,17 +44,14 @@ const Mob4gntwkDualAxisChart = ({
 }: DualAxisChartProps) => {
   const chartRef = useRef<ChartJS<'bar' | 'line', number[], string> | null>(null);
 
-  // ✅ 수정: 모든 필수 속성을 포함하여 완전한 ProcessedChartData 객체 생성
   const processedData = useMemo<ProcessedChartData[]>(() => {
     const rawData = processChartData();
     return rawData.map(item => ({
       country: item.country,
-      // 기존 속성들 유지
       original_4G_value: item.population_covered_4G_percentage || item.original_4G_value,
       original_broadband_value: item.fixed_broadband_subscriptions_per_100 || item.original_broadband_value,
       coverage_year: item.coverage_year,
       broadband_year: item.broadband_year,
-      // ✅ 누락된 필수 속성들 추가
       population_covered_4G_percentage: item.population_covered_4G_percentage,
       fixed_broadband_subscriptions_per_100: item.fixed_broadband_subscriptions_per_100,
     }));
@@ -65,7 +62,7 @@ const Mob4gntwkDualAxisChart = ({
   const chartData = useMemo<ChartData<'bar' | 'line', number[], string>>(() => {
     const countries: string[] = barData.map(d => d.country);
     const barValues: number[] = barData.map(d => d.IT_MOB_4GNTWK_value);
-    
+
     const lineValues: number[] = barData.map(d => {
       const original = processedData.find(p => p.country === d.country);
       return original?.original_broadband_value ?? 0;
@@ -107,10 +104,7 @@ const Mob4gntwkDualAxisChart = ({
   const options = useMemo<ChartOptions<'bar' | 'line'>>(() => ({
     responsive: true,
     maintainAspectRatio: false,
-    interaction: {
-      mode: 'index',
-      intersect: false,
-    },
+    interaction: { mode: 'index', intersect: false },
     plugins: {
       legend: {
         position: 'bottom',
@@ -119,9 +113,7 @@ const Mob4gntwkDualAxisChart = ({
           boxWidth: 12,
           boxHeight: 12,
           padding: 25,
-          font: {
-            size: 12,
-          },
+          font: { size: 12 },
         },
       },
       tooltip: {
@@ -131,29 +123,25 @@ const Mob4gntwkDualAxisChart = ({
         bodyColor: '#222',
         borderColor: '#e0e0e0',
         borderWidth: 1,
-        cornerRadius: 8,
+        cornerRadius: 0,
         displayColors: true,
         padding: 12,
         boxPadding: 6,
-        titleFont: {
-          size: 14,
-          weight: 'bold',
-        },
-        bodyFont: {
-          size: 12,
-        },
+        titleFont: { size: 14, weight: 'bold' },
+        bodyFont: { size: 12 },
         callbacks: {
           title: (tooltipItems: TooltipItem<'bar' | 'line'>[]) => tooltipItems[0].label,
           label: (context: TooltipItem<'bar' | 'line'>) => {
             const country: string = context.label;
             const originalData = processedData.find(d => d.country === country);
-
             if (context.datasetIndex === 0) {
               const value = originalData?.original_4G_value;
-              return value !== null && value !== undefined ? `${value}%` : 'No data';
+              return value !== null && value !== undefined ? `${country} 4G: ${value}%` : `${country} 4G: No data`;
             } else if (context.datasetIndex === 1) {
               const value = originalData?.original_broadband_value;
-              return value !== null && value !== undefined ? `${value.toFixed(1)} per 100` : 'No data';
+              return value !== null && value !== undefined
+                ? `${country} Broadband: ${value.toFixed(1)} per 100`
+                : `${country} Broadband: No data`;
             }
             return '';
           },
@@ -175,21 +163,8 @@ const Mob4gntwkDualAxisChart = ({
     scales: {
       x: {
         display: true,
-        title: {
-          display: true,
-          text: 'Country',
-          font: { size: 12 },
-        },
-        grid: {
-          display: true,
-          color: '#e0e0e0',
-          lineWidth: 0.5,
-        },
-        ticks: {
-          font: { size: 11 },
-          maxRotation: 45,
-          minRotation: 0,
-        },
+        grid: { display: true, color: '#e0e0e0', lineWidth: 0.5 },
+        ticks: { font: { size: 11 }, maxRotation: 45, minRotation: 0 },
       },
       y: {
         type: 'linear',
@@ -197,20 +172,9 @@ const Mob4gntwkDualAxisChart = ({
         position: 'left',
         min: 0,
         max: 100,
-        title: {
-          display: true,
-          text: 'Proportion of population covered by 4G (%)',
-          font: { size: 12 },
-        },
-        grid: {
-          display: true,
-          color: '#e0e0e0',
-          lineWidth: 0.5,
-        },
-        ticks: {
-          stepSize: 20,
-          font: { size: 11 },
-        },
+        title: { display: true, text: 'Proportion of population covered by 4G (%)', font: { size: 12 } },
+        grid: { display: true, color: '#e0e0e0', lineWidth: 0.5 },
+        ticks: { stepSize: 20, font: { size: 11 } },
       },
       y1: {
         type: 'linear',
@@ -218,28 +182,14 @@ const Mob4gntwkDualAxisChart = ({
         position: 'right',
         min: 0,
         max: 40,
-        title: {
-          display: true,
-          text: 'Fixed Internet broadband subscriptions (per 100)',
-          font: { size: 12 },
-        },
-        grid: {
-          display: false,
-          drawOnChartArea: false,
-        },
-        ticks: {
-          font: { size: 11 },
-        },
+        title: { display: true, text: 'Fixed Internet broadband subscriptions (per 100)', font: { size: 12 } },
+        grid: { display: false, drawOnChartArea: false },
+        ticks: { font: { size: 11 } },
       },
     },
     elements: {
-      line: {
-        tension: 0,
-      },
-      point: {
-        radius: 0,
-        hoverRadius: 3,
-      },
+      line: { tension: 0 },
+      point: { radius: 0, hoverRadius: 3 },
     },
     onHover: (event: ChartEvent, activeElements: any[]) => {
       const target = event.native?.target as HTMLElement;
@@ -247,21 +197,67 @@ const Mob4gntwkDualAxisChart = ({
         target.style.cursor = activeElements.length > 0 ? 'pointer' : 'default';
       }
     },
+    layout: {
+      padding: {
+        top: 24,
+        bottom: 0,
+        left: 0,
+        right: 0,
+      },
+    },
   }), [processedData]);
 
   return (
-    <div style={{
-      width,
-      height: typeof height === 'number' ? `${height}px` : height,
-      padding: '20px',
-      backgroundColor: 'transparent',
-    }}>
+    <div
+      style={{
+        width,
+        height: typeof height === 'number' ? `${height}px` : height,
+        minHeight: typeof height === 'number' ? `${height}px` : height,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'transparent',
+        paddingTop: 0,
+        boxSizing: 'border-box',
+      }}
+    >
       <ChartComponent
         ref={chartRef}
         type="bar"
         data={chartData}
         options={options}
+        style={{ flex: 1, maxWidth: '100%' }}
       />
+      {/* 차트 하단, 카드 내부 border 바로 위에 출처 추가 */}
+      <div
+        className="text-xs text-gray-600 text-left"
+        style={{
+          fontFamily: 'inherit',
+          marginTop: 18,
+          marginBottom: 0,
+        }}
+      >
+        <strong>Source:</strong> Fixed Broadband & Network by country (
+        <a
+          href="https://stats.pacificdata.org/vis?lc=en&df[ds]=SPC2&df[id]=DF_BP50&df[ag]=SPC&df[vs]=1.0&av=true&lo=1&lom=LASTNOBSERVATIONS&dq=A.IT_NET_BBND.._T._T._T._T._T._T._Z._T&to[TIME_PERIOD]=false&ly[rs]=INDICATOR&ly[rw]=GEO_PICT%2CTIME_PERIOD&pd=%2C"
+          style={{ color: '#2563eb', textDecoration: 'underline' }}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          link
+        </a>
+        ) / 4G Mobile Network (
+        <a
+          href="https://stats.pacificdata.org/vis?lc=en&df[ds]=SPC2&df[id]=DF_BP50&df[ag]=SPC&df[vs]=1.0&av=true&lo=1&lom=LASTNOBSERVATIONS&dq=A.IT_MOB_4GNTWK.._T._T._T._T._T._T._Z._T&to[TIME_PERIOD]=false&ly[rs]=INDICATOR&ly[rw]=GEO_PICT%2CTIME_PERIOD&pd=%2C"
+          style={{ color: '#2563eb', textDecoration: 'underline' }}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          link
+        </a>
+        )
+      </div>
     </div>
   );
 };

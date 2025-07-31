@@ -220,3 +220,12 @@ export interface AccessibilityScaleResult {
   broadbandMax: number;
   scaleRatio: number;
 }
+
+export interface GroupedBarChartJsData {
+  labels: string[];
+  datasets: {
+    label: string;
+    data: number[];
+    backgroundColor?: string;
+  }[];
+}

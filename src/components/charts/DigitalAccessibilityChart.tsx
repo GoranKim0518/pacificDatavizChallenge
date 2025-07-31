@@ -21,10 +21,7 @@ import {
   processAccessibilityChartData,
   transformForAccessibilityBarChart,
 } from '../../data/chartData';
-import type {
-  AccessibilityChartData,
-  DualAxisChartProps,
-} from '../../types/chart';
+import type { AccessibilityChartData, DualAxisChartProps } from '../../types/chart';
 
 ChartJS.register(
   CategoryScale,
@@ -34,27 +31,29 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 
-const DigitalAccessibilityChart: React.FC<DualAxisChartProps> = ({
-  height = 500,
-  width = '100%'
-}) => {
+export default function DigitalAccessibilityChart({
+  height = 560,
+  width = '100%',
+}: DualAxisChartProps) {
   const chartRef = useRef<ChartJS<'bar' | 'line', number[], string> | null>(null);
 
-  const processedData = useMemo<AccessibilityChartData[]>(() => processAccessibilityChartData(), []);
-  const barData = useMemo(() => transformForAccessibilityBarChart(processedData as any), [processedData]);
-  
-  const maxBroadbandValue = useMemo(() => {
-    return Math.max(...processedData.map(d => d.broadband_subscriptions_per_100));
-  }, [processedData]);
+  const processedData = useMemo<AccessibilityChartData[]>(
+    () => processAccessibilityChartData(),
+    []
+  );
+  const barData = useMemo(
+    () => transformForAccessibilityBarChart(processedData),
+    [processedData]
+  );
 
   const chartData = useMemo<ChartData<'bar' | 'line', number[], string>>(() => {
-    const countries: string[] = barData.map(d => d.country);
-    const barValues: number[] = barData.map(d => d.IT_USE_ii99_value);
-    const lineValues: number[] = barData.map(d => {
-      const original = processedData.find(p => p.country === d.country);
+    const countries = barData.map((d) => d.country);
+    const barValues = barData.map((d) => d.IT_USE_ii99_value);
+    const lineValues = barData.map((d) => {
+      const original = processedData.find((p) => p.country === d.country);
       return original?.broadband_subscriptions_per_100 ?? 0;
     });
 
@@ -70,6 +69,7 @@ const DigitalAccessibilityChart: React.FC<DualAxisChartProps> = ({
           borderWidth: 0,
           yAxisID: 'y',
           order: 2,
+          hidden: false,
         },
         {
           type: 'line' as const,
@@ -86,6 +86,7 @@ const DigitalAccessibilityChart: React.FC<DualAxisChartProps> = ({
           yAxisID: 'y1',
           order: 1,
           fill: false,
+          hidden: false,
         },
       ],
     };
@@ -94,10 +95,7 @@ const DigitalAccessibilityChart: React.FC<DualAxisChartProps> = ({
   const options = useMemo<ChartOptions<'bar' | 'line'>>(() => ({
     responsive: true,
     maintainAspectRatio: false,
-    interaction: {
-      mode: 'index',
-      intersect: false,
-    },
+    interaction: { mode: 'index', intersect: false },
     plugins: {
       legend: {
         position: 'bottom',
@@ -106,9 +104,7 @@ const DigitalAccessibilityChart: React.FC<DualAxisChartProps> = ({
           boxWidth: 12,
           boxHeight: 12,
           padding: 25,
-          font: {
-            size: 12,
-          },
+          font: { size: 12 },
         },
       },
       tooltip: {
@@ -118,43 +114,50 @@ const DigitalAccessibilityChart: React.FC<DualAxisChartProps> = ({
         bodyColor: '#222',
         borderColor: '#e0e0e0',
         borderWidth: 1,
-        cornerRadius: 8,
+        cornerRadius: 0,
         displayColors: true,
         padding: 12,
         boxPadding: 6,
-        titleFont: {
-          size: 14,
-          weight: 'bold',
-        },
-        bodyFont: {
-          size: 12,
-        },
+        titleFont: { size: 14, weight: 'bold' },
+        bodyFont: { size: 12 },
         callbacks: {
-          title: (tooltipItems: TooltipItem<'bar' | 'line'>[]) => tooltipItems[0].label,
+          title: (tooltipItems: TooltipItem<'bar' | 'line'>[]) =>
+            tooltipItems[0].label ?? '',
           label: (context: TooltipItem<'bar' | 'line'>) => {
-            const country: string = context.label;
-            const originalData = processedData.find(d => d.country === country);
-
-            if (context.datasetIndex === 0) {
+            const country = context.label ?? '';
+            const originalData = processedData.find((d) => d.country === country);
+            if (context.dataset.label === 'Internet Usage') {
               const value = originalData?.original_usage_value;
-              return value !== null && value !== undefined ? `${value}%` : 'No data';
-            } else if (context.datasetIndex === 1) {
+              return value != null
+                ? `${country} Usage: ${value}%`
+                : `${country} Usage: No data`;
+            }
+            if (context.dataset.label === 'Broadband Subscriptions') {
               const value = originalData?.original_broadband_value;
-              return value !== null && value !== undefined ? `${value.toFixed(1)} per 100` : 'No data';
+              return value != null
+                ? `${country} Broadband: ${value.toFixed(1)} per 100`
+                : `${country} Broadband: No data`;
             }
             return '';
           },
           afterLabel: (context: TooltipItem<'bar' | 'line'>) => {
-            const country: string = context.label;
-            const originalData = processedData.find(d => d.country === country);
-            const yearValue = context.datasetIndex === 0
-              ? originalData?.usage_year
-              : originalData?.broadband_year;
+            const country = context.label ?? '';
+            const originalData = processedData.find((d) => d.country === country);
+            const yearValue =
+              context.dataset.label === 'Internet Usage'
+                ? originalData?.usage_year
+                : originalData?.broadband_year;
             return `Year: ${yearValue?.toString() ?? 'N/A'}`;
           },
           labelColor: (context: TooltipItem<'bar' | 'line'>) => ({
-            borderColor: context.datasetIndex === 0 ? '#e8c547' : '#f47560',
-            backgroundColor: context.datasetIndex === 0 ? '#e8c547' : '#f47560',
+            borderColor:
+              context.dataset.label === 'Internet Usage'
+                ? '#e8c547'
+                : '#f47560',
+            backgroundColor:
+              context.dataset.label === 'Internet Usage'
+                ? '#e8c547'
+                : '#f47560',
           }),
         },
       },
@@ -162,71 +165,40 @@ const DigitalAccessibilityChart: React.FC<DualAxisChartProps> = ({
     scales: {
       x: {
         display: true,
-        title: {
-          display: true,
-          text: 'Country',
-          font: { size: 12 },
-        },
-        grid: {
-          display: true,
-          color: '#e0e0e0',
-          lineWidth: 0.5,
-        },
-        ticks: {
-          font: { size: 11 },
-          maxRotation: 45,
-          minRotation: 0,
-        },
+        title: { display: false, text: '' },
+        grid: { display: true, color: '#e0e0e0', lineWidth: 0.5 },
+        ticks: { font: { size: 11 }, maxRotation: 45, minRotation: 0 },
       },
       y: {
         type: 'linear',
         display: true,
         position: 'left',
         min: 0,
-        max: 100, // 최댓값을 100%로 고정
-        title: {
-          display: true,
-          text: 'Internet Usage (%)',
-          font: { size: 12 },
-        },
-        grid: {
-          display: true,
-          color: '#e0e0e0',
-          lineWidth: 0.5,
-        },
-        ticks: {
-          stepSize: 20, // 20% 간격으로 눈금 표시
-          font: { size: 11 },
-        },
+        max: 100,
+        title: { display: true, text: 'Internet Usage (%)', font: { size: 12 } },
+        grid: { display: true, color: '#e0e0e0', lineWidth: 0.5 },
+        ticks: { stepSize: 20, font: { size: 11 }, display: true },
       },
       y1: {
         type: 'linear',
         display: true,
         position: 'right',
         min: 0,
-        max: 40, // 실제 데이터의 최댓값 사용
-        title: {
-          display: true,
-          text: 'Broadband Subscriptions (per 100)',
-          font: { size: 12 },
-        },
+        max: 40,
+        title: { display: true, text: 'Broadband Subscriptions (per 100)', font: { size: 12 } },
         grid: {
-          display: false,
-          drawOnChartArea: false,
+          display: true,
+          drawOnChartArea: true,
+          color: '#e0e0e0',
+          lineWidth: 0.5,
+          z: 0,
         },
-        ticks: {
-          font: { size: 11 },
-        },
+        ticks: { font: { size: 11 }, stepSize: 5, display: true },
       },
     },
     elements: {
-      line: {
-        tension: 0,
-      },
-      point: {
-        radius: 0,
-        hoverRadius: 3,
-      },
+      line: { tension: 0 },
+      point: { radius: 0, hoverRadius: 3 },
     },
     onHover: (event: ChartEvent, activeElements: any[]) => {
       const target = event.native?.target as HTMLElement;
@@ -234,23 +206,62 @@ const DigitalAccessibilityChart: React.FC<DualAxisChartProps> = ({
         target.style.cursor = activeElements.length > 0 ? 'pointer' : 'default';
       }
     },
-  }), [processedData, maxBroadbandValue]);
+    layout: {
+      padding: { top: 24, bottom: 0, left: 0, right: 0 },
+    },
+  }), [processedData]);
 
   return (
-    <div style={{
-      width: typeof width === 'string' ? width : `${width}px`,
-      height: typeof height === 'number' ? `${height}px` : height,
-      padding: '20px',
-      backgroundColor: 'transparent',
-    }}>
+    <div
+      style={{
+        width: typeof width === 'string' ? width : `${width}px`,
+        height: typeof height === 'number' ? `${height}px` : height,
+        minHeight: typeof height === 'number' ? `${height}px` : height,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'transparent',
+        paddingTop: 0,
+        boxSizing: 'border-box',
+      }}
+    >
       <ChartComponent
         ref={chartRef}
         type="bar"
         data={chartData}
         options={options}
+        style={{ flex: 1, maxWidth: '100%' }}
       />
+      {/* 카드 내부 하단(border 바로 위)에만 출처 */}
+      <div
+        className="text-xs text-gray-600 text-left"
+        style={{
+          fontFamily: 'inherit',
+          marginTop: 18,
+          marginBottom: 0,
+        }}
+      >
+        <strong>Source:</strong> Fixed Broadband & Network by country (
+        <a
+          href="https://stats.pacificdata.org/vis?lc=en&df[ds]=SPC2&df[id]=DF_BP50&df[ag]=SPC&df[vs]=1.0&av=true&lo=1&lom=LASTNOBSERVATIONS&dq=A.IT_NET_BBND.._T._T._T._T._T._T._Z._T&to[TIME_PERIOD]=false&ly[rs]=INDICATOR&ly[rw]=GEO_PICT%2CTIME_PERIOD&pd=%2C"
+          style={{ color: '#2563eb', textDecoration: 'underline' }}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          link
+        </a>
+        ) / Internet Usage by country (
+        <a
+          href="https://stats.pacificdata.org/vis?lc=en&df[ds]=SPC2&df[id]=DF_BP50&df[ag]=SPC&df[vs]=1.0&av=true&lo=1&lom=LASTNOBSERVATIONS&dq=A.IT_USE_ii99.._T._T._T._T._T._T._Z._T&to[TIME_PERIOD]=false&ly[rs]=INDICATOR&ly[rw]=GEO_PICT%2CTIME_PERIOD&pd=%2C"
+          style={{ color: '#2563eb', textDecoration: 'underline' }}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          link
+        </a>
+        )
+      </div>
     </div>
   );
-};
-
-export default DigitalAccessibilityChart;
+}

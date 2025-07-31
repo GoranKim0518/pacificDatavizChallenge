@@ -1,320 +1,430 @@
-// components/charts/IctSunburstChart.tsx
-import { useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { ResponsiveSunburst } from '@nivo/sunburst';
-import { 
+import type { ComputedDatum } from '@nivo/sunburst';
+import type { SunburstNode } from '../../data/chartData';
+import {
   processICTTradeDataForSunburst,
   getSunburstColor,
-  //formatSunburstValue,
+  formatSunburstValue,
   getSunburstLabel,
-  PACIFIC_COUNTRIES
+  PACIFIC_COUNTRIES,
 } from '../../data/chartData';
-import type { 
-  SunburstFilterOptions,
-  SunburstChartConfig 
-} from '../../types/chart';
+import type { SunburstFilterOptions } from '../../types/chart';
 import { useAppStore } from '../../stores/useAppstore';
+import ChartButton from '../ui/ChartButton';
 
-interface ICTSunburstChartProps extends SunburstChartConfig {
-  title?: string;
-  showControls?: boolean;
-  interactive?: boolean;
+function CustomDropdown<T extends string>({
+  label,
+  options,
+  value,
+  onChange,
+  style,
+  labelId,
+}: {
+  label: string;
+  labelId?: string;
+  options: { key: T; label: string }[];
+  value: T;
+  onChange: (val: T) => void;
+  style?: React.CSSProperties;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="relative" style={style}>
+      <label
+        id={labelId}
+        className="block mb-1 text-xs"
+        style={{ fontFamily: 'inherit', fontWeight: 400 }}
+      >
+        {label}
+      </label>
+      <button
+        type="button"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-labelledby={labelId}
+        className="w-[120px] flex items-center justify-between bg-white border border-gray-300 py-2 pl-3 pr-2 text-sm transition hover:border-gray-500"
+        style={{
+          borderRadius: 0,
+          fontFamily: 'inherit',
+          fontWeight: 400,
+          outline: open ? '2px solid #0f62fe' : 'none',
+          outlineOffset: 2,
+          boxShadow: 'none',
+        }}
+        tabIndex={0}
+        onClick={() => setOpen(v => !v)}
+      >
+        <span style={{ fontFamily: 'inherit', fontWeight: 400 }}>
+          {options.find(opt => opt.key === value)?.label ?? ''}
+        </span>
+        <span style={{ fontSize: 16, marginLeft: 8, color: '#888' }}>▼</span>
+      </button>
+      {open && (
+        <ul
+          className="absolute z-40 mt-1 w-full bg-white border border-gray-300"
+          style={{
+            borderRadius: 0,
+            fontFamily: 'inherit',
+            boxShadow: 'none',
+          }}
+          role="listbox"
+        >
+          {options.map(opt => (
+            <li
+              key={opt.key}
+              className={`pl-3 pr-2 py-2 cursor-pointer text-sm transition hover:bg-gray-100 hover:text-gray-800`}
+              role="option"
+              aria-selected={opt.key === value}
+              onClick={() => {
+                onChange(opt.key);
+                setOpen(false);
+              }}
+              tabIndex={0}
+              style={{
+                background: opt.key === value ? '#e8e8e8' : 'white',
+                borderRadius: 0,
+                fontWeight: 400,
+                fontFamily: 'inherit',
+              }}
+            >
+              {opt.label}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
 }
 
-const TRADE_FLOW_BUTTONS = [
-  { key: 'both' as const, label: 'Both', description: 'Imports and Exports' },
-  { key: 'M' as const, label: 'Imports', description: 'Import flows only' },
-  { key: 'X' as const, label: 'Exports', description: 'Export flows only' }
+const TRADE_FLOW_OPTIONS = [
+  { key: 'both' as const, label: 'Both' },
+  { key: 'M' as const, label: 'Imports' },
+  { key: 'X' as const, label: 'Exports' },
+];
+const ICT_TYPE_OPTIONS = [
+  { key: 'both' as const, label: 'Both' },
+  { key: 'ICTPRD' as const, label: 'Products' },
+  { key: 'ICTSRV' as const, label: 'Services' },
 ];
 
-const ICT_TYPE_BUTTONS = [
-  { key: 'both' as const, label: 'Both', description: 'Products and Services' },
-  { key: 'ICTPRD' as const, label: 'Products', description: 'ICT Products only' },
-  { key: 'ICTSRV' as const, label: 'Services', description: 'ICT Services only' }
-];
-
-function ICTSunburstChart({
+export default function ICTSunburstChart({
   height = 600,
-  width = '100%',
   margin = { top: 40, right: 40, bottom: 40, left: 40 },
   borderWidth = 2,
-  borderColor = '#ffffff',
+  borderColor = '#fff',
   enableArcLabels = true,
-  title = `ICT Trade Sunburst - ${PACIFIC_COUNTRIES.length} Pacific Countries`,
   showControls = true,
-  interactive = true
-}: ICTSunburstChartProps) {
-  
+  interactive = true,
+}: {
+  height?: number;
+  margin?: { top: number; right: number; bottom: number; left: number };
+  borderWidth?: number;
+  borderColor?: string;
+  enableArcLabels?: boolean;
+  showControls?: boolean;
+  interactive?: boolean;
+}) {
   const ictTradeChart = useAppStore(state => state.ictTradeChart);
   const setTradeFlow = useAppStore(state => state.setTradeFlow);
   const setIctType = useAppStore(state => state.setIctType);
   const setSelectedCountries = useAppStore(state => state.setSelectedCountries);
   const resetICTTradeFilters = useAppStore(state => state.resetICTTradeFilters);
 
-  const filterOptions = useMemo<SunburstFilterOptions>(() => ({
+  const [countryDropdownOpen, setCountryDropdownOpen] = useState(false);
+
+  const filterOptions: SunburstFilterOptions = useMemo(() => ({
     tradeFlow: ictTradeChart.tradeFlow,
     ictType: ictTradeChart.ictType,
-    countries: ictTradeChart.selectedCountries.length > 0 ? ictTradeChart.selectedCountries : [...PACIFIC_COUNTRIES],
-    yearRange: ictTradeChart.yearRange
+    countries: ictTradeChart.selectedCountries.length > 0
+      ? ictTradeChart.selectedCountries
+      : [...PACIFIC_COUNTRIES],
+    yearRange: ictTradeChart.yearRange,
   }), [
     ictTradeChart.tradeFlow,
     ictTradeChart.ictType,
     ictTradeChart.selectedCountries,
-    ictTradeChart.yearRange
+    ictTradeChart.yearRange,
   ]);
-
-  const sunburstData = useMemo(() => {
-    try {
-      return processICTTradeDataForSunburst(filterOptions);
-    } catch (error) {
-      console.error('Error processing sunburst data:', error);
-      return { id: 'ICT Trade', children: [] };
-    }
-  }, [filterOptions]);
 
   const currentSelectionLabel = useMemo(() => {
-    const tradeLabel = ictTradeChart.tradeFlow === 'both' ? 'All Trade' :
-                      ictTradeChart.tradeFlow === 'M' ? 'Imports Only' : 'Exports Only';
-    const typeLabel = ictTradeChart.ictType === 'both' ? 'All ICT' :
-                      ictTradeChart.ictType === 'ICTPRD' ? 'Products Only' : 'Services Only';
+    const tradeLabel =
+      ictTradeChart.tradeFlow === 'both' ? 'All Trade'
+        : ictTradeChart.tradeFlow === 'M' ? 'Imports Only'
+        : 'Exports Only';
+    const typeLabel =
+      ictTradeChart.ictType === 'both' ? 'All ICT'
+        : ictTradeChart.ictType === 'ICTPRD' ? 'Products Only'
+        : 'Services Only';
     const countryCount = ictTradeChart.selectedCountries.length || PACIFIC_COUNTRIES.length;
-    
     return { tradeLabel, typeLabel, countryCount };
-  }, [ictTradeChart.tradeFlow, ictTradeChart.ictType, ictTradeChart.selectedCountries.length]);
-
-  const handleTradeFlowChange = useCallback((flow: 'both' | 'M' | 'X') => {
-    setTradeFlow(flow);
-  }, [setTradeFlow]);
-
-  const handleIctTypeChange = useCallback((type: 'both' | 'ICTPRD' | 'ICTSRV') => {
-    setIctType(type);
-  }, [setIctType]);
-
-  const handleCountrySelectionChange = useCallback((countries: string[]) => {
-    setSelectedCountries(countries);
-  }, [setSelectedCountries]);
-
-  const CountrySelector = useMemo(() => {
-    const isAllSelected = ictTradeChart.selectedCountries.length === PACIFIC_COUNTRIES.length || ictTradeChart.selectedCountries.length === 0;
-
-    const handleSelectAll = () => {
-      handleCountrySelectionChange(isAllSelected ? [] : [...PACIFIC_COUNTRIES]);
-    };
-
-    const handleToggleCountry = (countryCode: string) => {
-      const currentSelection = ictTradeChart.selectedCountries.length > 0 ? ictTradeChart.selectedCountries : [...PACIFIC_COUNTRIES];
-      if (currentSelection.includes(countryCode)) {
-        handleCountrySelectionChange(currentSelection.filter(c => c !== countryCode));
-      } else {
-        handleCountrySelectionChange([...currentSelection, countryCode]);
-      }
-    };
-
-    return (
-      <div className="p-4 bg-white rounded-lg border border-gray-200">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-sm font-semibold text-gray-700">
-            Pacific Countries ({ictTradeChart.selectedCountries.length || PACIFIC_COUNTRIES.length}/{PACIFIC_COUNTRIES.length})
-          </span>
-          <button
-            onClick={handleSelectAll}
-            className="text-xs px-3 py-1 bg-blue-100 hover:bg-blue-200 rounded-md text-blue-700 font-medium transition-colors"
-            type="button"
-          >
-            {isAllSelected ? 'Select None' : 'Select All'}
-          </button>
-        </div>
-        
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 max-h-40 overflow-y-auto">
-          {PACIFIC_COUNTRIES.map(countryCode => {
-            const isSelected = ictTradeChart.selectedCountries.length === 0 || ictTradeChart.selectedCountries.includes(countryCode);
-            return (
-              <label 
-                key={countryCode} 
-                className="flex items-center gap-2 text-sm cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors"
-              >
-                <input
-                  type="checkbox"
-                  checked={isSelected}
-                  onChange={() => handleToggleCountry(countryCode)}
-                  className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
-                />
-                <span className="font-mono font-bold">{countryCode}</span>
-              </label>
-            );
-          })}
-        </div>
-      </div>
-    );
-  }, [ictTradeChart.selectedCountries, handleCountrySelectionChange]);
-
-  const ControlPanel = useMemo(() => {
-    if (!showControls) return null;
-
-    return (
-      <div className="mb-6 space-y-4">
-        <div className="flex flex-wrap gap-6 items-center p-4 bg-gray-50 rounded-lg">
-          <div className="flex gap-3 items-center">
-            <span className="text-sm font-semibold text-gray-700">Trade Flow:</span>
-            <div className="flex gap-2">
-              {TRADE_FLOW_BUTTONS.map(button => (
-                <button
-                  key={button.key}
-                  onClick={() => handleTradeFlowChange(button.key)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                    ictTradeChart.tradeFlow === button.key 
-                      ? 'bg-blue-500 text-white shadow-md transform scale-105' 
-                      : 'bg-white border border-gray-300 hover:bg-gray-50 hover:border-gray-400'
-                  }`}
-                  type="button"
-                  title={button.description}
-                >
-                  {button.label}
-                </button>
-              ))}
-            </div>
-          </div>
-          
-          <div className="flex gap-3 items-center">
-            <span className="text-sm font-semibold text-gray-700">ICT Type:</span>
-            <div className="flex gap-2">
-              {ICT_TYPE_BUTTONS.map(button => (
-                <button
-                  key={button.key}
-                  onClick={() => handleIctTypeChange(button.key)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                    ictTradeChart.ictType === button.key 
-                      ? 'bg-green-500 text-white shadow-md transform scale-105' 
-                      : 'bg-white border border-gray-300 hover:bg-gray-50 hover:border-gray-400'
-                  }`}
-                  type="button"
-                  title={button.description}
-                >
-                  {button.label}
-                </button>
-              ))}
-            </div>
-          </div>
-          
-          <button
-            onClick={resetICTTradeFilters}
-            className="px-4 py-2 rounded-lg text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium transition-colors"
-            type="button"
-          >
-            🔄 Reset All
-          </button>
-        </div>
-
-        {CountrySelector}
-        
-        <div className="p-4 bg-white rounded-lg border border-gray-200">
-          <div className="font-semibold mb-3 text-gray-800">
-            Current Selection: {currentSelectionLabel.tradeLabel} × {currentSelectionLabel.typeLabel}
-          </div>
-          <div className="grid grid-cols-3 gap-4">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">{currentSelectionLabel.countryCount}</div>
-              <div className="text-xs text-gray-600">Countries</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">{PACIFIC_COUNTRIES.length}</div>
-              <div className="text-xs text-gray-600">Total Pacific</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600">3</div>
-              <div className="text-xs text-gray-600">Hierarchy Levels</div>
-            </div>
-          </div>
-          <div className="text-xs text-gray-500 mt-3 pt-3 border-t border-gray-200">
-            💡 <strong>Sunburst Structure:</strong> Trade Flow → ICT Type → Countries • 
-            <span className="text-amber-600 font-semibold">Values in Millions USD</span>
-          </div>
-        </div>
-      </div>
-    );
   }, [
-    showControls,
     ictTradeChart.tradeFlow,
     ictTradeChart.ictType,
-    handleTradeFlowChange,
-    handleIctTypeChange,
-    resetICTTradeFilters,
-    CountrySelector,
-    currentSelectionLabel
+    ictTradeChart.selectedCountries.length,
   ]);
 
-  if (!sunburstData.children || sunburstData.children.length === 0) {
-    return (
-      <div className="w-full">
-        {title && (
-          <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
-            {title}
-          </h2>
-        )}
-        {ControlPanel}
-        <div className="flex items-center justify-center h-96 bg-gray-100 rounded-lg">
-          <div className="text-center">
-            <div className="text-8xl text-gray-300 mb-4">🌅</div>
-            <p className="text-xl text-gray-500 mb-2 font-semibold">
-              No trade data available
-            </p>
-            <p className="text-sm text-gray-400">
-              Try adjusting filters or select different countries
-            </p>
-          </div>
-        </div>
+  const handleTradeFlowChange = useCallback(
+    (val: 'both' | 'M' | 'X') => setTradeFlow(val),
+    [setTradeFlow]
+  );
+  const handleIctTypeChange = useCallback(
+    (val: 'both' | 'ICTPRD' | 'ICTSRV') => setIctType(val),
+    [setIctType]
+  );
+  const handleReset = useCallback(() => {
+    resetICTTradeFilters();
+  }, [resetICTTradeFilters]);
+
+  const isAllSelected = ictTradeChart.selectedCountries.length === 0
+    || ictTradeChart.selectedCountries.length === PACIFIC_COUNTRIES.length;
+
+  const handleToggleAllCountries = useCallback(() => {
+    setSelectedCountries(isAllSelected ? ["__NONE_SENTINEL__"] : [...PACIFIC_COUNTRIES]);
+  }, [isAllSelected, setSelectedCountries]);
+
+  const handleCountryToggle = useCallback((country: string) => {
+    let selection = ictTradeChart.selectedCountries.length > 0
+      ? [...ictTradeChart.selectedCountries]
+      : [...PACIFIC_COUNTRIES];
+
+    if (
+      (ictTradeChart.selectedCountries.length === 0 || selection.length === PACIFIC_COUNTRIES.length)
+      && selection.includes(country)
+    ) {
+      selection = PACIFIC_COUNTRIES.filter(c => c !== country);
+      if (selection.length === 0) {
+        setSelectedCountries(["__NONE_SENTINEL__"]);
+      } else {
+        setSelectedCountries(selection);
+      }
+    } else if (selection.includes(country)) {
+      const filtered = selection.filter(c => c !== country);
+      setSelectedCountries(filtered.length ? filtered : ["__NONE_SENTINEL__"]);
+    } else {
+      setSelectedCountries([...selection, country]);
+    }
+  }, [ictTradeChart.selectedCountries, setSelectedCountries]);
+
+  const displayedCountries = useMemo(() => {
+    const c = ictTradeChart.selectedCountries;
+    if (c.length === 1 && c[0] === "__NONE_SENTINEL__") return [];
+    if (c.length > 0) return c.filter(v => v !== "__NONE_SENTINEL__");
+    return [];
+  }, [ictTradeChart.selectedCountries]);
+
+  const handleDropdownToggle = useCallback(() => {
+    setCountryDropdownOpen(v => !v);
+  }, []);
+
+  const CustomTooltip = useCallback((props: ComputedDatum<SunburstNode>) => (
+    <div
+      style={{
+        background: '#fff',
+        color: '#222',
+        padding: '10px 16px',
+        borderRadius: 0,
+        fontSize: '13px',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+        border: '1px solid #e0e0e0',
+        minWidth: 180,
+        pointerEvents: 'auto',
+        fontFamily: 'inherit',
+      }}
+    >
+      <div
+        style={{
+          fontWeight: 'bold',
+          marginBottom: 8,
+          fontSize: 15,
+        }}
+      >
+        {getSunburstLabel(String(props.id))}
+        <span style={{ marginLeft: 8, color: '#e67e22' }}>
+          {formatSunburstValue(props.value ?? 0)} USD
+        </span>
       </div>
-    );
-  }
+      <div
+        style={{
+          color: '#666',
+          fontSize: 13,
+        }}
+      >
+        {props.id}
+      </div>
+    </div>
+  ), []);
 
   return (
-    <div className="w-full">
-      {title && (
-        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
-          {title}
-        </h2>
+    <div style={{ fontFamily: 'inherit', width: '100%', position: 'relative', minHeight: 200 }}>
+      {showControls && (
+        <>
+          {/* Controls UI */}
+          <div className="flex flex-col md:flex-row md:items-center md:gap-8 gap-3 mb-4">
+            <div className="flex gap-6 items-end">
+              <CustomDropdown
+                label="Trade Flow"
+                options={TRADE_FLOW_OPTIONS}
+                value={ictTradeChart.tradeFlow}
+                onChange={handleTradeFlowChange}
+                labelId="tradeflow-select"
+              />
+              <CustomDropdown
+                label="ICT Type"
+                options={ICT_TYPE_OPTIONS}
+                value={ictTradeChart.ictType}
+                onChange={handleIctTypeChange}
+                labelId="icttype-select"
+              />
+            </div>
+            <div className="md:ml-auto flex items-center gap-3" style={{ minWidth: 280 }}>
+              <button
+                type="button"
+                onClick={handleDropdownToggle}
+                className="border border-gray-400 rounded-none bg-white hover:bg-gray-100 px-4 py-2 text-sm font-normal transition"
+                style={{
+                  minWidth: 120,
+                  fontFamily: 'inherit',
+                  borderRadius: 0,
+                  boxShadow: 'none',
+                }}
+                aria-haspopup="listbox"
+                aria-expanded={countryDropdownOpen}
+              >
+                Pacific Countries ▾
+              </button>
+              <ChartButton
+                id="reset"
+                label="Reset"
+                isSelected={false}
+                onClick={handleReset}
+              />
+            </div>
+          </div>
+          {countryDropdownOpen && (
+            <div
+              className="absolute z-50 mt-2 border border-gray-300 bg-white rounded-none"
+              style={{
+                fontFamily: 'inherit',
+                borderRadius: 0,
+                minWidth: 250,
+                maxWidth: 420,
+                maxHeight: 320,
+                right: 16,
+                boxShadow: 'none',
+              }}
+            >
+              <div className="flex items-center justify-between py-2 px-3 border-b border-gray-100">
+                <span className="text-xs font-semibold">
+                  Countries ({displayedCountries.length || PACIFIC_COUNTRIES.length}/{PACIFIC_COUNTRIES.length})
+                </span>
+                <button
+                  onClick={handleToggleAllCountries}
+                  className="text-blue-700 text-xs px-2 py-1 border border-gray-500 bg-gray-100 rounded-none"
+                  type="button"
+                  style={{ borderRadius: 0 }}
+                >
+                  {isAllSelected ? 'Unselect All' : 'Select All'}
+                </button>
+              </div>
+              <ul className="py-1 px-3 grid grid-cols-2 gap-y-0.5 gap-x-2 max-h-56 overflow-y-auto">
+                {PACIFIC_COUNTRIES.map(code => {
+                  let selected: boolean;
+                  if (ictTradeChart.selectedCountries.length === 0) {
+                    selected = true;
+                  } else if (
+                    ictTradeChart.selectedCountries.length === 1 &&
+                    ictTradeChart.selectedCountries[0] === "__NONE_SENTINEL__"
+                  ) {
+                    selected = false;
+                  } else {
+                    selected = ictTradeChart.selectedCountries.includes(code);
+                  }
+                  return (
+                    <li key={code} className="flex items-center gap-2 py-1">
+                      <input
+                        type="checkbox"
+                        checked={selected}
+                        onChange={() => handleCountryToggle(code)}
+                        className="w-4 h-4 border-gray-800 rounded-none"
+                        id={`country-${code}`}
+                      />
+                      <label htmlFor={`country-${code}`} className="text-xs font-mono font-bold">{code}</label>
+                    </li>
+                  );
+                })}
+              </ul>
+              <div className="flex justify-end py-2 pr-4">
+                <button
+                  onClick={handleDropdownToggle}
+                  className="text-xs border border-gray-500 px-3 py-1 rounded-none bg-gray-50"
+                  style={{ borderRadius: 0 }}
+                  type="button"
+                >Close</button>
+              </div>
+            </div>
+          )}
+        </>
       )}
-      
-      {ControlPanel}
-      
-      <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
-        <div style={{ height, width }}>
+
+      <div
+        className="relative bg-white mt-8 mb-4"
+        style={{
+          maxWidth: 980,
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          border: '1px solid #e0e0e0',
+          borderRadius: 0,
+          boxShadow: 'none',
+        }}
+      >
+        <div style={{ height, width: '100%' }}>
           <ResponsiveSunburst
-            data={sunburstData}
+            data={
+              processICTTradeDataForSunburst({
+                ...filterOptions,
+                countries:
+                  displayedCountries.length === 0
+                    ? []
+                    : displayedCountries,
+              })
+            }
             margin={margin}
             id="id"
             value="value"
-            cornerRadius={3}
+            cornerRadius={0}
             borderWidth={borderWidth}
             borderColor={borderColor}
-            colors={(node: any) => getSunburstColor(node.id)}
+            colors={node => getSunburstColor(String(node.id))}
             childColor={{ from: 'color', modifiers: [['opacity', 0.6]] }}
             enableArcLabels={enableArcLabels}
-            arcLabel={(node: any) => {
-              const label = getSunburstLabel(node.id);
+            arcLabel={node => {
+              const label = getSunburstLabel(String(node.id));
               return label.length > 10 ? `${label.slice(0, 8)}...` : label;
             }}
-            arcLabelsRadiusOffset={0.5}
+            arcLabelsRadiusOffset={0.54}
             arcLabelsSkipAngle={10}
             arcLabelsTextColor={{ from: 'color', modifiers: [['darker', 2]] }}
             isInteractive={interactive}
-            animate={true}
+            tooltip={CustomTooltip}
+            animate
             motionConfig="wobbly"
           />
         </div>
-      </div>
-      
-      <div className="mt-4 text-center">
-        <div className="text-sm text-gray-600 mb-1">
-          ICT Trade Sunburst for {PACIFIC_COUNTRIES.length} Pacific Island Countries
-        </div>
-        <div className="text-xs text-gray-500">
-          Source: DF_TRADE_ICT_records.json • 
-          <span className="text-amber-600 font-semibold">Values in Millions USD (UNIT_MULT: 6)</span> • 
-          Hierarchy: {currentSelectionLabel.tradeLabel} → {currentSelectionLabel.typeLabel} → Countries
+        {/* 카드 내부 하단(border 바로 위) 출처 추가 */}
+        <div
+          className="mt-4 mb-3 px-6 text-xs text-gray-600 text-center"
+          style={{ fontFamily: 'inherit' }}
+        >
+          ICT Trade Sunburst for {PACIFIC_COUNTRIES.length} Pacific Island Countries<br />
+          <strong>Source:</strong> <a
+            href="https://stats.pacificdata.org/vis?lc=en&df[ds]=SPC2&df[id]=DF_TRADE_ICT&df[ag]=SPC&df[vs]=1.0&dq=A..AMTCUR.M%2BX.ICTPRD%2BICTSRV&pd=2010%2C&to[TIME_PERIOD]=false"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: '#2563eb', textDecoration: 'underline' }}
+          >link</a>
         </div>
       </div>
     </div>
   );
 }
-
-export default ICTSunburstChart;
