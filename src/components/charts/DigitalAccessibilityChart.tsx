@@ -48,17 +48,19 @@ export default function DigitalAccessibilityChart({
     () => processAccessibilityChartData(),
     []
   );
+
   const barData = useMemo(
     () => transformForAccessibilityBarChart(processedData),
     [processedData]
   );
 
+  // 차트 데이터 생성 시 null 대신 NaN으로 치환 (타입 호환 및 차트식별용)
   const chartData = useMemo<ChartData<'bar' | 'line', number[], string>>(() => {
-    const countries = barData.map((d) => d.country);
-    const barValues = barData.map((d) => d.IT_USE_ii99_value);
-    const lineValues = barData.map((d) => {
-      const original = processedData.find((p) => p.country === d.country);
-      return original?.broadband_subscriptions_per_100 ?? 0;
+    const countries = barData.map(d => d.country);
+    const barValues = barData.map(d => d.IT_USE_ii99_value ?? NaN);
+    const lineValues = barData.map(d => {
+      const original = processedData.find(p => p.country === d.country);
+      return original?.broadband_subscriptions_per_100 ?? NaN;
     });
 
     return {
@@ -129,7 +131,7 @@ export default function DigitalAccessibilityChart({
             tooltipItems[0].label ?? '',
           label: (context: TooltipItem<'bar' | 'line'>) => {
             const country = context.label ?? '';
-            const originalData = processedData.find((d) => d.country === country);
+            const originalData = processedData.find(d => d.country === country);
             if (context.dataset.label === 'Internet Usage') {
               const value = originalData?.original_usage_value;
               return value != null
@@ -138,7 +140,8 @@ export default function DigitalAccessibilityChart({
             }
             if (context.dataset.label === 'Fixed Internet broadband subscriptions (per 100)') {
               const value = originalData?.broadband_subscriptions_per_100;
-              return value != null
+              // isNaN 체크 포함해 No data 분기
+              return value != null && !isNaN(value)
                 ? `${country} Broadband: ${value.toFixed(1)} per 100`
                 : `${country} Broadband: No data`;
             }
@@ -146,7 +149,7 @@ export default function DigitalAccessibilityChart({
           },
           afterLabel: (context: TooltipItem<'bar' | 'line'>) => {
             const country = context.label ?? '';
-            const originalData = processedData.find((d) => d.country === country);
+            const originalData = processedData.find(d => d.country === country);
             const yearValue =
               context.dataset.label === 'Internet Usage'
                 ? originalData?.usage_year

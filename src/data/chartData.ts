@@ -1,9 +1,7 @@
-// data/chartData.ts
 import rawData from "./json/merged-all.json";
 import educationComputerRawData from "./json/SE_ACS_CMPTR.json";
 import ictTradeRawData from "./json/DF_TRADE_ICT_records.json";
 
-// 기본 데이터 타입 정의
 export interface RawDataItem {
   GEO_PICT: string;
   TIME_PERIOD: number;
@@ -35,7 +33,7 @@ export const PACIFIC_COUNTRIES = [
 
 type PacificCountry = typeof PACIFIC_COUNTRIES[number];
 
-// SE_ACS_CMPTR 데이터용 타입 정의
+// SE_ACS_CMPTR
 export interface EducationComputerRawData {
   INDICATOR: string;
   GEO_PICT: string;
@@ -47,7 +45,7 @@ export interface EducationComputerRawData {
   DATA_SOURCE: string;
 }
 
-// ICT 무역 데이터 타입 정의
+// ICT
 export interface ICTTradeRawData {
   GEO_PICT: string;
   TIME_PERIOD: number;
@@ -59,7 +57,7 @@ export interface ICTTradeRawData {
   UNIT_MEASURE?: string;
 }
 
-// Sunburst 차트용 타입 정의
+// Sunburst
 export interface SunburstNode {
   id: string;
   parent?: string;
@@ -74,7 +72,6 @@ export interface SunburstFilterOptions {
   yearRange?: [number, number];
 }
 
-// 교육 레벨 매핑
 export const EDUCATION_LEVEL_LABELS = {
   'PRIMARY_ALL': 'Primary Education',
   'SECONDARY_UPPER': 'Upper Secondary', 
@@ -83,7 +80,7 @@ export const EDUCATION_LEVEL_LABELS = {
 
 type EducationLevelCode = keyof typeof EDUCATION_LEVEL_LABELS;
 
-// D3.js 전용 HeatMap 데이터 타입
+// D3.js HeatMap
 export interface D3HeatmapDataPoint {
   country: string;
   level: string;
@@ -98,7 +95,6 @@ interface ProcessedEducationData {
   source: string;
 }
 
-// D3.js 전용 HeatMap 데이터 처리 함수
 export const processEducationComputerDataForD3 = (): {
   data: D3HeatmapDataPoint[];
   countries: string[];
@@ -154,7 +150,6 @@ export const processEducationComputerDataForD3 = (): {
   };
 };
 
-// D3.js 전용 색상 함수
 export const getHeatMapColor = (value: number | null): string => {
   if (value === null) return '#f3f4f6';
   if (value >= 80) return '#08306b';
@@ -165,7 +160,6 @@ export const getHeatMapColor = (value: number | null): string => {
   return '#deebf7';
 };
 
-// ===== 공통 데이터 처리 함수들 =====
 export interface ProcessedChartData {
   country: string;
   population_covered_4G_percentage: number;
@@ -205,7 +199,6 @@ export const processChartData = (): ProcessedChartData[] => {
   });
 };
 
-// ===== Chart.js 호환성을 위한 변환 함수들 =====
 interface BarChartItem {
   country: string;
   IT_MOB_4GNTWK_value: number;
@@ -255,7 +248,6 @@ export const calculateScaleRatio = (data: ProcessedChartData[]): ScaleRatioResul
   };
 };
 
-// ===== Scatter Plot 데이터 =====
 export interface ScatterPlotDataPoint {
   x: string;
   y: number;
@@ -331,7 +323,6 @@ export const availableCountries = Array.from(
   )
 ).sort();
 
-// ===== E-Government Index 데이터 =====
 export interface BarChartDataPoint {
   country: string;
   value: number;
@@ -371,7 +362,6 @@ export const egiAvailableCountries = eGovernmentIndexBarData
   .map(item => item.country)
   .sort();
 
-// ===== Downsoft 차트 데이터 =====
 export interface DownsoftChartData {
   country: string;
   male: number;
@@ -432,7 +422,6 @@ export const processDownsoftChartData = (): DownsoftChartData[] => {
   });
 };
 
-// ===== Digital Accessibility 데이터 =====
 export interface AccessibilityChartData {
   country: string;
   internet_usage_percentage: number;
@@ -498,11 +487,8 @@ export const calculateAccessibilityScaleRatio = (data: AccessibilityChartData[])
   };
 };
 
-// ===== ICT 무역 데이터 처리 (Sunburst Chart) =====
-
 const ictTradeData: ICTTradeRawData[] = ictTradeRawData as ICTTradeRawData[];
 
-// Sunburst 차트용 데이터 처리 함수
 export const processICTTradeDataForSunburst = (
   filters: SunburstFilterOptions = {
     tradeFlow: 'both',
@@ -527,19 +513,16 @@ export const processICTTradeDataForSunburst = (
     return countryMatch && tradeFlowMatch && ictTypeMatch && yearMatch;
   });
 
-  // 데이터 집계
   const aggregatedData = new Map<string, number>();
   
   filteredData.forEach((item: ICTTradeRawData) => {
     const unitMult = item.UNIT_MULT || 0;
     const value = item.OBS_VALUE * Math.pow(10, unitMult - 6);
     
-    // 계층 구조: 루트 > 무역흐름 > ICT타입 > 국가
     const tradeFlowKey = item.TRADE_FLOW === 'M' ? 'Imports' : 'Exports';
     const ictTypeKey = item.ICT_PRDSRV === 'ICTPRD' ? 'Products' : 'Services';
     const countryKey = item.GEO_PICT;
     
-    // 각 레벨별 집계
     const keys = [
       tradeFlowKey,
       `${tradeFlowKey}.${ictTypeKey}`,
@@ -551,13 +534,11 @@ export const processICTTradeDataForSunburst = (
     });
   });
 
-  // Sunburst 구조 생성
   const root: SunburstNode = {
     id: 'ICT Trade',
     children: []
   };
 
-  // Level 1: 무역 흐름
   const tradeFlows = ['Imports', 'Exports'];
   tradeFlows.forEach(tradeFlow => {
     if (filters.tradeFlow !== 'both' && 
@@ -575,7 +556,6 @@ export const processICTTradeDataForSunburst = (
       children: []
     };
 
-    // Level 2: ICT 타입
     const ictTypes = ['Products', 'Services'];
     ictTypes.forEach(ictType => {
       if (filters.ictType !== 'both' && 
@@ -594,7 +574,6 @@ export const processICTTradeDataForSunburst = (
         children: []
       };
 
-      // Level 3: 국가
       targetCountries.forEach(country => {
         const countryKey = `${tradeFlow}.${ictType}.${country}`;
         const countryValue = aggregatedData.get(countryKey) || 0;
@@ -621,19 +600,17 @@ export const processICTTradeDataForSunburst = (
   return root;
 };
 
-// Sunburst 차트용 색상 함수
 export const getSunburstColor = (nodeId: string): string => {
-  // Level 1: 무역 흐름
-  if (nodeId === 'Imports') return '#3b82f6'; // 파랑
-  if (nodeId === 'Exports') return '#ef4444'; // 빨강
+
+  if (nodeId === 'Imports') return '#3b82f6';
+  if (nodeId === 'Exports') return '#ef4444';
   
-  // Level 2: ICT 타입
-  if (nodeId.includes('Imports_Products')) return '#1d4ed8'; // 진한 파랑
-  if (nodeId.includes('Imports_Services')) return '#60a5fa'; // 밝은 파랑
-  if (nodeId.includes('Exports_Products')) return '#dc2626'; // 진한 빨강
-  if (nodeId.includes('Exports_Services')) return '#f87171'; // 밝은 빨강
+
+  if (nodeId.includes('Imports_Products')) return '#1d4ed8';
+  if (nodeId.includes('Imports_Services')) return '#60a5fa';
+  if (nodeId.includes('Exports_Products')) return '#dc2626';
+  if (nodeId.includes('Exports_Services')) return '#f87171';
   
-  // Level 3: 국가
   if (nodeId.includes('_')) {
     const parts = nodeId.split('_');
     if (parts.length >= 3) {
@@ -652,7 +629,6 @@ export const getSunburstColor = (nodeId: string): string => {
   return '#6b7280';
 };
 
-// 값 포맷팅 함수
 export const formatSunburstValue = (value: number): string => {
   if (value >= 1000) {
     return `${(value / 1000).toFixed(1)}B`;
@@ -667,7 +643,6 @@ export const formatSunburstValue = (value: number): string => {
   }
 };
 
-// 표시용 라벨 생성 함수
 export const getSunburstLabel = (nodeId: string): string => {
   if (nodeId === 'ICT Trade') return 'ICT Trade';
   if (nodeId === 'Imports') return 'Imports';
@@ -677,11 +652,9 @@ export const getSunburstLabel = (nodeId: string): string => {
     const parts = nodeId.split('_');
     
     if (parts.length === 2) {
-      // Level 2: 무역흐름_ICT타입
-      return parts[1]; // Products 또는 Services
+      return parts[1];
     } else if (parts.length === 3) {
-      // Level 3: 무역흐름_ICT타입_국가
-      return parts[2]; // 국가 코드
+      return parts[2];
     }
   }
   
