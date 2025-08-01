@@ -22,7 +22,6 @@ const IslandSection = () => {
     addConnectedIsland
   } = useAppStore();
 
-  // 모바일 감지 훅
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -68,7 +67,6 @@ const IslandSection = () => {
     }
   ];
 
-  // 완성 다리 지연 애니메이션 관리
   useEffect(() => {
     if (pacificIslands.connectedIslands.length === 4) {
       const timer = setTimeout(() => {
@@ -277,7 +275,6 @@ const IslandSection = () => {
         })}
       </svg>
       
-      {/* 모바일 전용 우측 상단 닫기 버튼 */}
       {isMobile && isExpanded && (
         <button 
           className="mobile-close-button" 
@@ -288,7 +285,6 @@ const IslandSection = () => {
         </button>
       )}
       
-      {/* 모바일 전용 하단 진행도 */}
       {isMobile && isExpanded && (
         <div className="mobile-progress-overlay">
           <div className="progress-dots">
@@ -319,23 +315,22 @@ const IslandSection = () => {
 
   return (
     <div className={`island-widget ${isExpanded ? 'widget-open' : 'widget-closed'}`}>
-      {/* 축소된 상태 */}
+
       {!isExpanded && (
         <button className="widget-trigger-fixed" onClick={toggleWidget} aria-label="Open Pacific Navigator">
           🌺
         </button>
       )}
 
-      {/* 확장된 상태 - 모바일과 데스크톱 분기 */}
       {isExpanded && (
         <>
           {isMobile ? (
-            /* 모바일: 맵만 표시 */
+
             <div className="mobile-map-container">
               {renderIslandMap()}
             </div>
           ) : (
-            /* 데스크톱: 기존 패널 구조 */
+
             <div className="widget-panel-fixed-size">
               <div className="panel-header">
                 <span className="panel-title">Pacific Navigator</span>

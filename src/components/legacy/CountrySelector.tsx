@@ -1,4 +1,3 @@
-// components/ui/CountrySelector.tsx
 import { useMemo, useCallback } from 'react';
 import { PACIFIC_COUNTRIES } from '../../data/chartData';
 
@@ -16,13 +15,12 @@ const COUNTRY_NAMES: Record<string, string> = {
 };
 
 function CountrySelector({ selectedCountries, onCountriesChange, className = '' }: CountrySelectorProps) {
-  // ✅ 수정: 전체 배열을 의존성으로 사용
+
   const isAllSelected = useMemo(() => 
     selectedCountries.length === PACIFIC_COUNTRIES.length, 
-    [selectedCountries] // 전체 배열을 의존성으로
+    [selectedCountries]
   );
 
-  // ✅ 수정: useCallback으로 최적화
   const handleSelectAll = useCallback(() => {
     if (isAllSelected) {
       onCountriesChange([]);
@@ -31,7 +29,6 @@ function CountrySelector({ selectedCountries, onCountriesChange, className = '' 
     }
   }, [isAllSelected, onCountriesChange]);
 
-  // ✅ 수정: useCallback으로 최적화
   const handleCountryToggle = useCallback((countryCode: string) => {
     if (selectedCountries.includes(countryCode)) {
       onCountriesChange(selectedCountries.filter(c => c !== countryCode));

@@ -1,4 +1,3 @@
-// components/ContentSection.tsx
 interface ContentSectionProps {
   title: string;
   subtitle?: string;

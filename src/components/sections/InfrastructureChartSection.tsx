@@ -1,4 +1,3 @@
-// src/components/sections/InfrastructureChartSection.tsx
 import { useAppStore } from '../../stores/useAppstore';
 import ChartButtonGroup from '../ui/ChartButtonGroup';
 import Mob4gntwkDualAxisChart from '../charts/Mob4gntwkDualAxisChart';
@@ -15,14 +14,12 @@ const InfrastructureChartSection = () => {
 
   return (
     <div>
-      {/* 버튼 그룹 (기존 기능 유지) */}
       <ChartButtonGroup 
         options={chartOptions}
         selectedChart={selectedChart2}
         setSelectedChart={setSelectedChart2}
       />
       
-      {/* 차트 컨테이너 (border + padding 등) */}
       <div 
         className="bg-white border border-gray-300 p-6 overflow-hidden mb-12" 
         style={{ marginTop: '1.5rem', minHeight: '500px' }}
@@ -59,7 +56,6 @@ const InfrastructureChartSection = () => {
           </div>
         )}
         
-        {/* 기본 선택값 없을 때 안내 */}
         {!selectedChart2 && (
           <div style={{ textAlign: 'center', padding: '50px' }}>
             <p>차트를 선택해주세요.</p>
@@ -67,7 +63,6 @@ const InfrastructureChartSection = () => {
         )}
       </div>
 
-      {/* 차트 컨테이너 바깥 즉시 아래, source 표시 (border에 더 붙도록 marginTop 음수값 적용) */}
       {selectedChart2 === 'infrastructure' && (
         <div
           className="text-xs text-gray-600 text-left"

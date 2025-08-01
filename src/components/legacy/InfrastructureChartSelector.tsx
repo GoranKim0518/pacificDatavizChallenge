@@ -1,4 +1,3 @@
-// components/legacy/InfrastructureChartSelector.tsx
 import ChartButtonGroup from '../ui/ChartButtonGroup';
 import type { ChartOption } from '../../types/chart';
 

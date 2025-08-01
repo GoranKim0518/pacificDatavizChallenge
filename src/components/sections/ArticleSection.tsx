@@ -9,7 +9,6 @@ const ArticleSection = () => (
     <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <article className="bg-white border border-gray-300 p-8 sm:p-12 lg:p-16">
 
-        {/* Foundations Section */}
         <div id="foundations" className="prose prose-lg max-w-none" style={{ marginTop: "2rem" }}>
           <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 mt-8 mb-8" style={{ lineHeight: "32px" }}>
             Blue Pacific 2050: Digital Foundations
@@ -30,7 +29,6 @@ const ArticleSection = () => (
           <ChartSection />
         </div>
 
-        {/* Infrastructure Section */}
         <div id="infrastructure" className="prose prose-lg max-w-none" style={{ marginTop: "2rem" }}>
           <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 mt-8 mb-8" style={{ lineHeight: "32px" }}>
             Mobile-First Pacific Infrastructure
@@ -51,7 +49,6 @@ const ArticleSection = () => (
           <InfrastructureChartSection />
         </div>
 
-        {/* Skills Section */}
         <div id="skills" className="prose prose-lg max-w-none" style={{ marginTop: "2rem" }}>
           <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 mt-8 mb-8" style={{ lineHeight: "32px" }}>
             Bridging the Digital Skills Gap
@@ -72,7 +69,6 @@ const ArticleSection = () => (
           <DownsoftChart />
         </div>
 
-        {/* Communities Section */}
         <div id="communities" className="prose prose-lg max-w-none" style={{ marginTop: "2rem" }}>
           <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 mt-8 mb-8" style={{ lineHeight: "32px" }}>
             Building Resilient Digital Communities
@@ -86,7 +82,7 @@ const ArticleSection = () => (
             Limited opportunities to use computers further contribute to declining digital literacy across these societies. Data shows that ICT-related exports from Pacific countries remain minimal, reflecting persistent challenges in building technical capacity and industrial competitiveness.
           </p>
           <p className="text-lg text-gray-700" style={{ lineHeight: "1.5", marginBottom: "2rem" }}>
-            Addressing these realities requires more than expanding infrastructure. Policies must integrate digital literacy programs and ICT sector development. Approaches such as remote learning platforms, increased regional cooperation, and international partnerships are necessary steps to improve ICT access and workforce training. These measures form the foundation for any future digital economy in the Blue Pacific context; they are essential rather than optional.
+            Addressing these challenges requires more than infrastructure expansion. Policies must include digital literacy and ICT sector development. Remote learning, regional cooperation, and global partnerships are key to improving access and training. These steps are fundamental for building a future digital economy in the Blue Pacific.
           </p>
         </div>
         <div className="not-prose chart-section-responsive" style={{ marginTop: "2rem", minHeight: 330 }}>

@@ -15,14 +15,12 @@ const ChartSection = () => {
 
   return (
     <div>
-      {/* 기존 버튼 그룹 유지 */}
       <ChartButtonGroup
         options={chartOptions}
         selectedChart={selectedChart1}
         setSelectedChart={setSelectedChart1}
       />
 
-      {/* 차트 컨테이너 (border 및 패딩 포함) */}
       <div className="bg-white border border-gray-300 p-6 overflow-hidden mb-6 mt-6">
         {selectedChart1 === 'mobile' && (
           <div>
@@ -41,13 +39,12 @@ const ChartSection = () => {
         )}
       </div>
 
-      {/* border div 바로 아래 Source 표시 - margin 조절해 border 쪽으로 붙임 */}
       {selectedChart1 === 'mobile' && (
         <div
           className="text-xs text-gray-600 text-left"
           style={{
             fontFamily: 'inherit',
-            marginTop: '-10px', // border쪽으로 더 붙임
+            marginTop: '-10px',
             paddingTop: '6px',
             paddingBottom: '2px',
           }}
@@ -70,7 +67,7 @@ const ChartSection = () => {
           className="text-xs text-gray-600 text-left"
           style={{
             fontFamily: 'inherit',
-            marginTop: '-10px', // border쪽으로 더 붙임
+            marginTop: '-10px',
             paddingTop: '6px',
             paddingBottom: '2px',
           }}

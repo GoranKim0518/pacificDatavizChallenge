@@ -18,13 +18,11 @@ const MobOwnSctPlt = () => {
     );
   }
 
-  // 반응형 마진 설정 (모바일 여부 체크)
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 640;
   const chartMargin = isMobile
     ? { top: 40, right: 70, bottom: 70, left: 80 }
     : { top: 70, right: 90, bottom: 90, left: 100 };
 
-  // 커스텀 툴팁: 사진1 스타일, 성별 텍스트만 해당 시리즈 색상
   function CustomTooltip({ node }: { node: any }) {
     const year = node.data.year ?? '';
     const country = node.formattedX;

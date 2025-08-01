@@ -1,4 +1,3 @@
-// components/ui/ChartButtonGroup.tsx
 import ChartButton from './ChartButton';
 import type { ChartOption } from '../../types/chart';
 

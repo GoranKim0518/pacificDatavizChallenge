@@ -5,7 +5,7 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
-  BarController, // 추가됨
+  BarController,
   Title,
   Tooltip,
   Legend,
@@ -14,7 +14,6 @@ import { processDownsoftChartData } from '../../data/chartData';
 import type { DownsoftChartData } from '../../types/chart';
 import type { ChartData, ChartOptions, TooltipItem } from 'chart.js';
 
-// 반드시 컨트롤러 등록! (BarController)
 ChartJS.register(
   CategoryScale,
   LinearScale,

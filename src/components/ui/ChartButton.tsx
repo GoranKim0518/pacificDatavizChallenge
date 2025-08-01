@@ -1,4 +1,3 @@
-// components/ChartButton.tsx
 import '../../styles/carbon-button.css';
 import { Button } from '@carbon/react';
 

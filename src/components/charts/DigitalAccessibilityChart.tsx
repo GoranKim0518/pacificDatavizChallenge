@@ -6,7 +6,8 @@ import {
   BarElement,
   PointElement,
   LineElement,
-  LineController,    // 반드시 추가!
+  BarController,
+  LineController,
   Title,
   Tooltip,
   Legend,
@@ -24,19 +25,18 @@ import {
 } from '../../data/chartData';
 import type { AccessibilityChartData, DualAxisChartProps } from '../../types/chart';
 
-
 ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
   PointElement,
   LineElement,
-  LineController,     // 반드시 추가!
+  BarController,
+  LineController,
   Title,
   Tooltip,
   Legend,
 );
-
 
 export default function DigitalAccessibilityChart({
   height = 560,
@@ -77,7 +77,7 @@ export default function DigitalAccessibilityChart({
         },
         {
           type: 'line' as const,
-          label: 'Broadband Subscriptions',
+          label: 'Fixed Internet broadband subscriptions',
           data: lineValues,
           borderColor: '#f47560',
           backgroundColor: '#f47560',
@@ -136,8 +136,8 @@ export default function DigitalAccessibilityChart({
                 ? `${country} Usage: ${value}%`
                 : `${country} Usage: No data`;
             }
-            if (context.dataset.label === 'Broadband Subscriptions') {
-              const value = originalData?.original_broadband_value;
+            if (context.dataset.label === 'Fixed Internet broadband subscriptions (per 100)') {
+              const value = originalData?.broadband_subscriptions_per_100;
               return value != null
                 ? `${country} Broadband: ${value.toFixed(1)} per 100`
                 : `${country} Broadband: No data`;
@@ -184,9 +184,21 @@ export default function DigitalAccessibilityChart({
         ticks: { stepSize: 20, font: { size: 11 }, display: true },
       },
       y1: {
-        // 오른쪽(브로드밴드) 축 숨김
         type: 'linear',
-        display: false,
+        display: true,
+        position: 'right',
+        min: 0,
+        max: 40,
+        title: {
+          display: true,
+          text: 'Fixed Internet broadband subscriptions (per 100)',
+          font: { size: 12 },
+        },
+        grid: {
+          display: false,
+          drawOnChartArea: false,
+        },
+        ticks: { font: { size: 11 } },
       },
     },
     elements: {
