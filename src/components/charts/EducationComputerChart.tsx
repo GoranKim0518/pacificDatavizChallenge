@@ -28,6 +28,28 @@ export default function EducationComputerChart() {
 
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
+  const updateCellStates = useCallback(
+    (
+      cells: d3.Selection<
+        SVGRectElement,
+        D3HeatmapDataPoint,
+        SVGGElement,
+        unknown
+      >
+    ) => {
+      cells
+        .style("filter", (d) => {
+          const id = `${d.country}-${d.level}`;
+          return clickedCellRef.current === id
+            ? "none"
+            : "drop-shadow(2px 2px 4px rgba(0,0,0,0.15))";
+        })
+        .attr("stroke", "#fff")
+        .attr("stroke-width", 1);
+    },
+    []
+  );
+
   useEffect(() => {
     if (!containerRef.current) return;
     const setDims = () => {
@@ -54,28 +76,6 @@ export default function EducationComputerChart() {
       }
     };
   }, []);
-
-  const updateCellStates = useCallback(
-    (
-      cells: d3.Selection<
-        SVGRectElement,
-        D3HeatmapDataPoint,
-        SVGGElement,
-        unknown
-      >
-    ) => {
-      cells
-        .style("filter", (d) => {
-          const id = `${d.country}-${d.level}`;
-          return clickedCellRef.current === id
-            ? "none"
-            : "drop-shadow(2px 2px 4px rgba(0,0,0,0.15))";
-        })
-        .attr("stroke", "#fff")
-        .attr("stroke-width", 1);
-    },
-    []
-  );
 
   useEffect(() => {
     if (
@@ -294,47 +294,52 @@ export default function EducationComputerChart() {
   ]);
 
   return (
-    <div
-      ref={containerRef}
-      className="bg-white border border-gray-300 p-6 mb-12 overflow-hidden"
-      style={{
-        marginTop: "1.5rem",
-        minHeight: dynMinHeight,
-        width: "100%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        overflow: "visible",
-      }}
-    >
+    <>
       <div
+        ref={containerRef}
+        className="bg-white border border-gray-300 p-6 overflow-visible"
         style={{
+          marginTop: "1.5rem",
+          minHeight: dynMinHeight,
           width: "100%",
-          height: "100%",
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
           justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        <svg
-          ref={svgRef}
-          width="100%"
-          height="100%"
-          style={{ overflow: "visible", display: "block" }}
-        />
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <svg
+            ref={svgRef}
+            width="100%"
+            height="100%"
+            style={{ overflow: "visible", display: "block" }}
+          />
+        </div>
       </div>
-      {/* 카드 내부 하단(border 바로 위)에 출처 추가 */}
+
+      {/* 차트 border 바로 아래에 Source div 추가 */}
       <div
         className="text-xs text-gray-600 text-left"
         style={{
           fontFamily: "inherit",
-          marginTop: 18,
-          marginBottom: 0,
+          marginTop: "-10px", // border 쪽으로 더 붙입니다
+          paddingTop: "6px",
+          paddingBottom: "10px",
+          marginBottom: "0",
+          maxWidth: "100%",
         }}
       >
-        <strong>Source:</strong> Computer access by education level & country (
+        <strong>Source:</strong> Computer access by education level &amp; country (
         <a
           href="https://stats.pacificdata.org/vis?lc=en&df[ds]=SPC2&df[id]=DF_BP50&df[ag]=SPC&df[vs]=1.0&av=true&lo=1&lom=LASTNOBSERVATIONS&dq=A.SE_ACS_CMPTR.._T._T._T._T._T._T.._T&to[TIME_PERIOD]=false&pd=%2C"
           style={{ color: "#2563eb", textDecoration: "underline" }}
@@ -345,6 +350,6 @@ export default function EducationComputerChart() {
         </a>
         )
       </div>
-    </div>
+    </>
   );
 }

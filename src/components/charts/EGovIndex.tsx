@@ -28,7 +28,6 @@ const EGovIndexBarChart = () => {
     eGovernmentIndexBarData.reduce((sum, item) => sum + (item.value ?? 0), 0) /
     eGovernmentIndexBarData.length;
 
-  // 기존 타입 명시 유지 (props: any)
   const EGIAverageLineLayer = (props: any) => {
     const { xScale, yScale } = props;
     const y = yScale(averageEGI);
@@ -72,7 +71,7 @@ const EGovIndexBarChart = () => {
         }}
       >
         <ResponsiveBar
-          data={eGovernmentIndexBarData as BarChartDataPoint[]} // 타입 단언으로 호환 처리
+          data={eGovernmentIndexBarData as BarChartDataPoint[]}
           keys={['value']}
           indexBy="country"
           margin={chartMargin}
@@ -130,12 +129,14 @@ const EGovIndexBarChart = () => {
                   fontSize: isMobile ? 14 : 16,
                 }}
               >
-                {data.country}{' '}
-                <span style={{ color }}>
+                <span style={{ color: '#222', fontWeight: 'bold' }}>
+                  {data.country}
+                </span>{' '}
+                <span style={{ color, fontWeight: 'bold' }}>
                   EGI
                 </span>
                 :{' '}
-                <span style={{ color: '#e67e22' }}>
+                <span style={{ color: '#e67e22', fontWeight: 'bold' }}>
                   {Number(value).toLocaleString(undefined, { maximumFractionDigits: 2 })}
                 </span>
               </div>
@@ -152,22 +153,6 @@ const EGovIndexBarChart = () => {
           animate
           motionConfig="gentle"
         />
-      </div>
-      {/* 하단 Source 표기 */}
-      <div
-        className="text-xs text-gray-600 text-left"
-        style={{ fontFamily: 'inherit', marginTop: 18, marginBottom: 0 }}
-      >
-        <strong>Source:</strong> E-Government Index by country (
-        <a
-          href="https://stats.pacificdata.org/vis?lc=en&df[ds]=SPC2&df[id]=DF_BP50&df[ag]=SPC&df[vs]=1.0&av=true&dq=A.EGI.._T._T._T._T._T._T._Z._T&to[TIME_PERIOD]=false&pd=%2C"
-          style={{ color: '#2563eb', textDecoration: 'underline' }}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          link
-        </a>
-        )
       </div>
     </div>
   );

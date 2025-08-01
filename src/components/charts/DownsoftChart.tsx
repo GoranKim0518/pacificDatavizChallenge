@@ -116,48 +116,52 @@ export default function Downsoft() {
   }), [processedData]);
 
   return (
-    <div
-      className="bg-white border border-gray-300 p-6 overflow-hidden mb-12"
-      style={{
-        marginTop: '1.5rem',
-        minHeight: 500,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}
-    >
-      <div style={{
-        width: '100%',
-        height: 450,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingBottom: -10,
-      }}>
-        <Bar data={chartData} options={options} />
+    <>
+      <div
+        className="bg-white border border-gray-300 p-6 overflow-hidden"
+        style={{
+          marginTop: '1.5rem',
+          minHeight: 500,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        <div style={{
+          width: '100%',
+          height: 450,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingBottom: -10,
+        }}>
+          <Bar data={chartData} options={options} />
+        </div>
       </div>
-      {/* 카드 내부 하단(border 바로 위)에 출처 추가 */}
+
+      {/* 차트 border 바깥쪽 바로 아래 위치하는 출처 div */}
       <div
         className="text-xs text-gray-600 text-left"
         style={{
           fontFamily: 'inherit',
-          marginTop: 18,
-          marginBottom: 0,
+          marginTop: '-10px', // border 바로 아래에 붙도록 조정 (필요시 맞춰서 조절하세요)
+          paddingTop: '6px',
+          paddingBottom: '2px',
         }}
       >
         <strong>Source:</strong> Software download skills by country (
         <a
           href="https://stats.pacificdata.org/vis?lc=en&df[ds]=SPC2&df[id]=DF_BP50&df[ag]=SPC&df[vs]=1.0&av=true&lo=1&lom=LASTNOBSERVATIONS&dq=A.DOWNSOFT.CK+FJ+FM+KI+MH+NC+NR+NU+PF+PG+PW+SB+TO+TV+VU+WS.F+M.Y15T49._T._T._T._T._Z._T&to[TIME_PERIOD]=false&ly[rs]=INDICATOR&ly[rw]=GEO_PICT%2CTIME_PERIOD&pd=,"
-          style={{ color: '#2563eb', textDecoration: 'underline' }}
           target="_blank"
           rel="noopener noreferrer"
+          style={{ color: '#2563eb', textDecoration: 'underline' }}
         >
           link
         </a>
         )
       </div>
-    </div>
+    </>
   );
 }

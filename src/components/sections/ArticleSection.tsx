@@ -80,13 +80,13 @@ const ArticleSection = () => (
         </div>
         <div className="prose prose-lg max-w-none">
           <p className="text-lg text-gray-700 mb-6" style={{ lineHeight: "1.5" }}>
-            Pacific Small Island Developing States show 20-60% computer access across education levels. Geographic isolation increases infrastructure costs. Economic constraints limit available resources. ICT professional shortages create structural problems beyond budget issues. These factors deepen the Pacific region's digital divide.
+            Access to computers across education levels in Pacific Island countries remains at 20-60%. This indicates that digital education infrastructure within schools is limited. Shortages in equipment and network connectivity continue to directly impede ICT training and the development of skilled professionals in the region.
           </p>
           <p className="text-lg text-gray-700 mb-6" style={{ lineHeight: "1.5" }}>
-            Educational constraints directly impact ICT industry development. Pacific countries show poor ICT export performance. Limited computer access creates a cycle of declining digital literacy. This leads to professional shortages. However, global digitalization accelerates rapidly. ICT products become increasingly important. This offers Pacific nations opportunities to overcome geographic constraints through digital solutions.
+            Limited opportunities to use computers further contribute to declining digital literacy across these societies. Data shows that ICT-related exports from Pacific countries remain minimal, reflecting persistent challenges in building technical capacity and industrial competitiveness.
           </p>
           <p className="text-lg text-gray-700" style={{ lineHeight: "1.5", marginBottom: "2rem" }}>
-            Solving these challenges requires integrated approaches. Educational infrastructure expansion must combine with ICT industry development. Key priorities include remote education platforms and regional cooperation. International development programs can provide economies of scale. Comprehensive strategies must link education investment with industrial policy. This will establish foundations for Blue Pacific 2050 digital economy opportunities and resilient connected communities.
+            Addressing these realities requires more than expanding infrastructure. Policies must integrate digital literacy programs and ICT sector development. Approaches such as remote learning platforms, increased regional cooperation, and international partnerships are necessary steps to improve ICT access and workforce training. These measures form the foundation for any future digital economy in the Blue Pacific context; they are essential rather than optional.
           </p>
         </div>
         <div className="not-prose chart-section-responsive" style={{ marginTop: "2rem", minHeight: 330 }}>

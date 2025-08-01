@@ -229,35 +229,6 @@ const Mob4gntwkDualAxisChart = ({
         options={options}
         style={{ flex: 1, maxWidth: '100%' }}
       />
-      {/* 차트 하단, 카드 내부 border 바로 위에 출처 추가 */}
-      <div
-        className="text-xs text-gray-600 text-left"
-        style={{
-          fontFamily: 'inherit',
-          marginTop: 18,
-          marginBottom: 0,
-        }}
-      >
-        <strong>Source:</strong> Fixed Broadband & Network by country (
-        <a
-          href="https://stats.pacificdata.org/vis?lc=en&df[ds]=SPC2&df[id]=DF_BP50&df[ag]=SPC&df[vs]=1.0&av=true&lo=1&lom=LASTNOBSERVATIONS&dq=A.IT_NET_BBND.._T._T._T._T._T._T._Z._T&to[TIME_PERIOD]=false&ly[rs]=INDICATOR&ly[rw]=GEO_PICT%2CTIME_PERIOD&pd=%2C"
-          style={{ color: '#2563eb', textDecoration: 'underline' }}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          link
-        </a>
-        ) / 4G Mobile Network (
-        <a
-          href="https://stats.pacificdata.org/vis?lc=en&df[ds]=SPC2&df[id]=DF_BP50&df[ag]=SPC&df[vs]=1.0&av=true&lo=1&lom=LASTNOBSERVATIONS&dq=A.IT_MOB_4GNTWK.._T._T._T._T._T._T._Z._T&to[TIME_PERIOD]=false&ly[rs]=INDICATOR&ly[rw]=GEO_PICT%2CTIME_PERIOD&pd=%2C"
-          style={{ color: '#2563eb', textDecoration: 'underline' }}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          link
-        </a>
-        )
-      </div>
     </div>
   );
 };

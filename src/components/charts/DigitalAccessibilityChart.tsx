@@ -188,7 +188,7 @@ export default function DigitalAccessibilityChart({
         title: { display: true, text: 'Broadband Subscriptions (per 100)', font: { size: 12 } },
         grid: {
           display: true,
-          drawOnChartArea: true,
+          drawOnChartArea: false,
           color: '#e0e0e0',
           lineWidth: 0.5,
           z: 0,
@@ -233,35 +233,6 @@ export default function DigitalAccessibilityChart({
         options={options}
         style={{ flex: 1, maxWidth: '100%' }}
       />
-      {/* 카드 내부 하단(border 바로 위)에만 출처 */}
-      <div
-        className="text-xs text-gray-600 text-left"
-        style={{
-          fontFamily: 'inherit',
-          marginTop: 18,
-          marginBottom: 0,
-        }}
-      >
-        <strong>Source:</strong> Fixed Broadband & Network by country (
-        <a
-          href="https://stats.pacificdata.org/vis?lc=en&df[ds]=SPC2&df[id]=DF_BP50&df[ag]=SPC&df[vs]=1.0&av=true&lo=1&lom=LASTNOBSERVATIONS&dq=A.IT_NET_BBND.._T._T._T._T._T._T._Z._T&to[TIME_PERIOD]=false&ly[rs]=INDICATOR&ly[rw]=GEO_PICT%2CTIME_PERIOD&pd=%2C"
-          style={{ color: '#2563eb', textDecoration: 'underline' }}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          link
-        </a>
-        ) / Internet Usage by country (
-        <a
-          href="https://stats.pacificdata.org/vis?lc=en&df[ds]=SPC2&df[id]=DF_BP50&df[ag]=SPC&df[vs]=1.0&av=true&lo=1&lom=LASTNOBSERVATIONS&dq=A.IT_USE_ii99.._T._T._T._T._T._T._Z._T&to[TIME_PERIOD]=false&ly[rs]=INDICATOR&ly[rw]=GEO_PICT%2CTIME_PERIOD&pd=%2C"
-          style={{ color: '#2563eb', textDecoration: 'underline' }}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          link
-        </a>
-        )
-      </div>
     </div>
   );
 }

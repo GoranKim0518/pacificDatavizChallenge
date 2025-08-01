@@ -13,6 +13,17 @@ import type { SunburstFilterOptions } from '../../types/chart';
 import { useAppStore } from '../../stores/useAppstore';
 import ChartButton from '../ui/ChartButton';
 
+const TRADE_FLOW_OPTIONS = [
+  { key: 'both' as const, label: 'Both' },
+  { key: 'M' as const, label: 'Imports' },
+  { key: 'X' as const, label: 'Exports' },
+];
+const ICT_TYPE_OPTIONS = [
+  { key: 'both' as const, label: 'Both' },
+  { key: 'ICTPRD' as const, label: 'Products' },
+  { key: 'ICTSRV' as const, label: 'Services' },
+];
+
 function CustomDropdown<T extends string>({
   label,
   options,
@@ -97,17 +108,6 @@ function CustomDropdown<T extends string>({
   );
 }
 
-const TRADE_FLOW_OPTIONS = [
-  { key: 'both' as const, label: 'Both' },
-  { key: 'M' as const, label: 'Imports' },
-  { key: 'X' as const, label: 'Exports' },
-];
-const ICT_TYPE_OPTIONS = [
-  { key: 'both' as const, label: 'Both' },
-  { key: 'ICTPRD' as const, label: 'Products' },
-  { key: 'ICTSRV' as const, label: 'Services' },
-];
-
 export default function ICTSunburstChart({
   height = 600,
   margin = { top: 40, right: 40, bottom: 40, left: 40 },
@@ -146,7 +146,6 @@ export default function ICTSunburstChart({
     ictTradeChart.selectedCountries,
     ictTradeChart.yearRange,
   ]);
-
 
   const handleTradeFlowChange = useCallback(
     (val: 'both' | 'M' | 'X') => setTradeFlow(val),
@@ -352,7 +351,7 @@ export default function ICTSunburstChart({
       )}
 
       <div
-        className="relative bg-white mt-8 mb-4"
+        className="relative bg-white mt-8 mb-10"
         style={{
           maxWidth: 980,
           marginLeft: 'auto',
@@ -395,19 +394,27 @@ export default function ICTSunburstChart({
             motionConfig="wobbly"
           />
         </div>
-        {/* 카드 내부 하단(border 바로 위) 출처 추가 */}
-        <div
-          className="mt-4 mb-3 px-6 text-xs text-gray-600 text-center"
-          style={{ fontFamily: 'inherit' }}
+      </div>
+      <div
+        className="text-xs text-gray-600 text-left"
+        style={{
+          fontFamily: 'inherit',
+          marginTop: '-10px',
+          marginBottom: 0,
+          padding: 0,
+          lineHeight: 1.4,
+        }}
+      >
+        <strong>Source:</strong> ICT Trade Sunburst for {PACIFIC_COUNTRIES.length} Pacific Island Countries (
+        <a
+          href="https://stats.pacificdata.org/vis?lc=en&df[ds]=SPC2&df[id]=DF_TRADE_ICT&df[ag]=SPC&df[vs]=1.0&dq=A..AMTCUR.M%2BX.ICTPRD%2BICTSRV&pd=2010%2C&to[TIME_PERIOD]=false"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: '#2563eb', textDecoration: 'underline' }}
         >
-          ICT Trade Sunburst for {PACIFIC_COUNTRIES.length} Pacific Island Countries<br />
-          <strong>Source:</strong> <a
-            href="https://stats.pacificdata.org/vis?lc=en&df[ds]=SPC2&df[id]=DF_TRADE_ICT&df[ag]=SPC&df[vs]=1.0&dq=A..AMTCUR.M%2BX.ICTPRD%2BICTSRV&pd=2010%2C&to[TIME_PERIOD]=false"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: '#2563eb', textDecoration: 'underline' }}
-          >link</a>
-        </div>
+          link
+        </a>
+        )
       </div>
     </div>
   );
