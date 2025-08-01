@@ -1,5 +1,5 @@
-import IslandSection from "../ui/islandSection";
-import BinaryWaveBackground from "../ui/waveBackground";
+import IslandSection from "../ui/IslandSection";
+import BinaryWaveBackground from "../ui/WaveBackground";
 
 const HeroSection = () => {
   return (
