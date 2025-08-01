@@ -118,7 +118,7 @@ export default function Downsoft() {
       y: {
         title: {
           display: true,
-          text: 'Software Download Skills (%)',
+          text: 'Software Setup Skills (%)',
           font: { size: 12 },
         },
         grid: { color: '#e0e0e0' },
@@ -171,7 +171,7 @@ export default function Downsoft() {
           paddingBottom: '2px',
         }}
       >
-        <strong>Source:</strong> Software download skills by country (
+        <strong>Source:</strong> Software Setup Skills by country (
         <a
           href="https://stats.pacificdata.org/vis?lc=en&df[ds]=SPC2&df[id]=DF_BP50&df[ag]=SPC&df[vs]=1.0&av=true&lo=1&lom=LASTNOBSERVATIONS&dq=A.DOWNSOFT.CK+FJ+FM+KI+MH+NC+NR+NU+PF+PG+PW+SB+TO+TV+VU+WS.F+M.Y15T49._T._T._T._T._Z._T&to[TIME_PERIOD]=false&ly[rs]=INDICATOR&ly[rw]=GEO_PICT%2CTIME_PERIOD&pd=,"
           target="_blank"
