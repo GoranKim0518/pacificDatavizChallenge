@@ -77,7 +77,7 @@ export default function DigitalAccessibilityChart({
         },
         {
           type: 'line' as const,
-          label: 'Fixed Internet broadband subscriptions',
+          label: 'Fixed Internet broadband subscriptions (per 100)',
           data: lineValues,
           borderColor: '#f47560',
           backgroundColor: '#f47560',
