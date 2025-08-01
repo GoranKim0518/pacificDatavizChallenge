@@ -337,6 +337,7 @@ export default function EducationComputerChart() {
         </a>
         )
       </div>
+      <div></div>
     </>
   );
 }
