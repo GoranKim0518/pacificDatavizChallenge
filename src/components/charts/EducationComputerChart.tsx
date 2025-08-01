@@ -297,49 +297,36 @@ export default function EducationComputerChart() {
     <>
       <div
         ref={containerRef}
-        className="bg-white border border-gray-300 p-6 overflow-visible"
+        className="bg-white border border-gray-300 p-6"
         style={{
-          marginTop: "1.5rem",
+          marginTop: "2rem",
           minHeight: dynMinHeight,
           width: "100%",
           display: "flex",
-          flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
         }}
       >
-        <div
-          style={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <svg
-            ref={svgRef}
-            width="100%"
-            height="100%"
-            style={{ overflow: "visible", display: "block" }}
-          />
-        </div>
+        <svg
+          ref={svgRef}
+          width="100%"
+          height="100%"
+          style={{ overflow: "visible", display: "block" }}
+        />
       </div>
 
-      {/* 차트 border 바로 아래에 Source div 추가 */}
       <div
         className="text-xs text-gray-600 text-left"
         style={{
           fontFamily: "inherit",
-          marginTop: "-10px", // border 쪽으로 더 붙입니다
+          marginTop: "-10px",
           paddingTop: "6px",
           paddingBottom: "10px",
           marginBottom: "0",
           maxWidth: "100%",
         }}
       >
-        <strong>Source:</strong> Computer access by education level &amp; country (
+        <strong>Source:</strong> Computer access by education level & country (
         <a
           href="https://stats.pacificdata.org/vis?lc=en&df[ds]=SPC2&df[id]=DF_BP50&df[ag]=SPC&df[vs]=1.0&av=true&lo=1&lom=LASTNOBSERVATIONS&dq=A.SE_ACS_CMPTR.._T._T._T._T._T._T.._T&to[TIME_PERIOD]=false&pd=%2C"
           style={{ color: "#2563eb", textDecoration: "underline" }}
