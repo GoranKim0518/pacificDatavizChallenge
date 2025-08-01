@@ -6,6 +6,7 @@ import {
   BarElement,
   PointElement,
   LineElement,
+  LineController,    // 반드시 추가!
   Title,
   Tooltip,
   Legend,
@@ -23,16 +24,19 @@ import {
 } from '../../data/chartData';
 import type { AccessibilityChartData, DualAxisChartProps } from '../../types/chart';
 
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
   PointElement,
   LineElement,
+  LineController,     // 반드시 추가!
   Title,
   Tooltip,
   Legend,
 );
+
 
 export default function DigitalAccessibilityChart({
   height = 560,
@@ -180,20 +184,9 @@ export default function DigitalAccessibilityChart({
         ticks: { stepSize: 20, font: { size: 11 }, display: true },
       },
       y1: {
+        // 오른쪽(브로드밴드) 축 숨김
         type: 'linear',
-        display: true,
-        position: 'right',
-        min: 0,
-        max: 40,
-        title: { display: true, text: 'Broadband Subscriptions (per 100)', font: { size: 12 } },
-        grid: {
-          display: true,
-          drawOnChartArea: false,
-          color: '#e0e0e0',
-          lineWidth: 0.5,
-          z: 0,
-        },
-        ticks: { font: { size: 11 }, stepSize: 5, display: true },
+        display: false,
       },
     },
     elements: {

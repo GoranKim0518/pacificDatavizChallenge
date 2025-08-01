@@ -6,6 +6,8 @@ import {
   BarElement,
   PointElement,
   LineElement,
+  BarController,     // 추가!!
+  LineController,    // 추가!!
   Title,
   Tooltip,
   Legend,
@@ -33,9 +35,11 @@ ChartJS.register(
   BarElement,
   PointElement,
   LineElement,
+  BarController,     // 반드시 추가
+  LineController,    // 반드시 추가
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 
 const Mob4gntwkDualAxisChart = ({

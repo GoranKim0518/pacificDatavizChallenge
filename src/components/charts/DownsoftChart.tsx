@@ -1,8 +1,29 @@
 import { useMemo } from 'react';
 import { Bar } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  BarController, // 추가됨
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 import { processDownsoftChartData } from '../../data/chartData';
 import type { DownsoftChartData } from '../../types/chart';
 import type { ChartData, ChartOptions, TooltipItem } from 'chart.js';
+
+// 반드시 컨트롤러 등록! (BarController)
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  BarController,
+  Title,
+  Tooltip,
+  Legend,
+);
 
 export default function Downsoft() {
   const processedData = useMemo<DownsoftChartData[]>(() => processDownsoftChartData(), []);
@@ -141,12 +162,11 @@ export default function Downsoft() {
         </div>
       </div>
 
-      {/* 차트 border 바깥쪽 바로 아래 위치하는 출처 div */}
       <div
         className="text-xs text-gray-600 text-left"
         style={{
           fontFamily: 'inherit',
-          marginTop: '-10px', // border 바로 아래에 붙도록 조정 (필요시 맞춰서 조절하세요)
+          marginTop: '-10px',
           paddingTop: '6px',
           paddingBottom: '2px',
         }}
