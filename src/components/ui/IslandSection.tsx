@@ -26,7 +26,6 @@ const IslandSection = () => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768);
     };
-    
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
@@ -66,6 +65,35 @@ const IslandSection = () => {
       path: 'M20,71 C23,68 29,67 31,72 C34,76 33,82 29,85 C26,88 20,89 18,83 C17,77 18,72 20,71Z'
     }
   ];
+
+  // islands 선언 이후로 이동: 섹션 스크롤 시 해당 섬 자동 활성화
+  useEffect(() => {
+    if (!Array.isArray(islands) || islands.length === 0) return;
+    const sectionIds = islands.map(island => island.section);
+    const handleIntersect = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setActiveIsland(entry.target.id);
+          // 잠금 해제: 이미 연결된 섬이 아니면 자동으로 연결
+          if (!pacificIslands.connectedIslands.includes(entry.target.id)) {
+            addConnectedIsland(entry.target.id);
+          }
+        }
+      });
+    };
+    const observer = new window.IntersectionObserver(handleIntersect, {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.5 // 50% 이상 보이면 활성화
+    });
+    sectionIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => {
+      observer.disconnect();
+    };
+  }, [islands, setActiveIsland]);
 
   useEffect(() => {
     if (pacificIslands.connectedIslands.length === 4) {
@@ -204,7 +232,7 @@ const IslandSection = () => {
 
   // 공통 맵 컴포넌트
   const renderIslandMap = () => (
-    <div className={`ocean-map ${isMobile ? 'mobile-only-map' : ''}`}>
+    <div className={`ocean-map${isMobile ? ' mobile-only-map' : ''}`} style={isMobile ? { filter: 'none', opacity: 1 } : {}}>
       <svg viewBox="0 0 100 100" className="map-svg">
         <defs>
           <radialGradient id="lightOcean" cx="50%" cy="50%" r="50%">
@@ -286,7 +314,7 @@ const IslandSection = () => {
       )}
       
       {isMobile && isExpanded && (
-        <div className="mobile-progress-overlay">
+        <div className="mobile-progress-overlay" style={{ filter: 'none', backdropFilter: 'none', background: 'rgba(255,255,255,0.85)' }}>
           <div className="progress-dots">
             {[1, 2, 3, 4].map(i => (
               <span 

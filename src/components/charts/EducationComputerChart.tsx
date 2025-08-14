@@ -19,9 +19,13 @@ export default function EducationComputerChart() {
     []
   );
 
-  const CELL_HEIGHT = 28;
-  const LEGEND_SPACE = 60;
-  const margin: D3ChartMargin = { top: 10, right: 80, bottom: 140, left: 68 };
+  // 반응형: 모바일 환경 감지
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+  const CELL_HEIGHT = isMobile ? 18 : 28;
+  const LEGEND_SPACE = isMobile ? 36 : 60;
+  const margin: D3ChartMargin = isMobile
+    ? { top: 6, right: 30, bottom: 70, left: 38 }
+    : { top: 10, right: 80, bottom: 140, left: 68 };
 
   const chartH = levels.length * CELL_HEIGHT;
   const dynMinHeight = chartH + margin.top + margin.bottom + LEGEND_SPACE;
@@ -104,7 +108,9 @@ export default function EducationComputerChart() {
     const fullChartHeight = realChartH + LEGEND_SPACE;
 
     const xOffset = Math.max(0, (availW - chartW) / 2);
-    const yOffset = Math.max(0, (availH - fullChartHeight) / 2);
+    // yOffset을 약간 더 아래로 내리기 위해 10~20% 추가
+    const yOffsetRaw = Math.max(0, (availH - fullChartHeight) / 2);
+    const yOffset = yOffsetRaw + (availH > 0 ? availH * 0.12 : 0);
 
     const g = svg
       .append("g")
@@ -255,11 +261,16 @@ export default function EducationComputerChart() {
       { range: "No Data", color: "#f3f4f6" },
     ];
 
+    // 차트와 범례 사이에 충분한 마진을 주기 위해 y 위치를 더 띄움
+    const legendMargin = isMobile ? 32 : 56; // 기존보다 더 넉넉하게
     const legend = g
       .append("g")
-      .attr("transform", `translate(0, ${realChartH + 40})`);
+      .attr("transform", `translate(0, ${realChartH + legendMargin})`);
 
     const itemW = chartW / legendData.length;
+    const legendRectSize = isMobile ? 10 : 15;
+    const legendTextX = legendRectSize + 7;
+    const legendTextFont = isMobile ? "9px" : "11px";
 
     const legendItem = legend
       .selectAll("g")
@@ -270,18 +281,18 @@ export default function EducationComputerChart() {
 
     legendItem
       .append("rect")
-      .attr("width", 15)
-      .attr("height", 15)
+      .attr("width", legendRectSize)
+      .attr("height", legendRectSize)
       .attr("fill", (d) => d.color)
       .attr("stroke", "#ccc")
       .attr("stroke-width", 0.5);
 
     legendItem
       .append("text")
-      .attr("x", 22)
-      .attr("y", 7.5)
+      .attr("x", legendTextX)
+      .attr("y", legendRectSize / 2)
       .attr("dy", "0.35em")
-      .style("font-size", "11px")
+      .style("font-size", legendTextFont)
       .style("fill", "#666")
       .text((d) => d.range);
   }, [
@@ -319,9 +330,9 @@ export default function EducationComputerChart() {
         className="text-xs text-gray-600 text-left"
         style={{
           fontFamily: "inherit",
-          marginTop: "-10px",
-          paddingTop: "6px",
-          paddingBottom: "10px",
+          marginTop: "1rem",
+          paddingTop: "2px",
+          paddingBottom: "2px",
           marginBottom: "0",
           maxWidth: "100%",
         }}

@@ -19,10 +19,27 @@ const EGovIndexBarChart = () => {
     );
   }
 
-  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 640;
-  const chartMargin = isMobile
-    ? { top: 40, right: 70, bottom: 70, left: 80 }
-    : { top: 70, right: 90, bottom: 90, left: 100 };
+  // TailwindCSS breakpoints 기준 모바일/태블릿/PC 환경 감지
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640; // sm: 640px
+  const isTablet = typeof window !== 'undefined' && window.innerWidth >= 640 && window.innerWidth < 1024; // md: 768px, lg: 1024px
+
+  // Tailwind 기준에 맞춰 마진/크기 최적화
+  let chartMargin;
+  let chartHeight;
+  let chartWidth;
+  if (isMobile) {
+    chartMargin = { top: 40, right: 30, bottom: 80, left: 40 };
+    chartHeight = 340;
+    chartWidth = '100%';
+  } else if (isTablet) {
+    chartMargin = { top: 60, right: 60, bottom: 100, left: 60 };
+    chartHeight = 410;
+    chartWidth = '100%';
+  } else {
+    chartMargin = { top: 80, right: 90, bottom: 120, left: 100 };
+    chartHeight = 480;
+    chartWidth = '100%';
+  }
 
   const averageEGI =
     eGovernmentIndexBarData.reduce((sum, item) => sum + (item.value ?? 0), 0) /
@@ -64,10 +81,14 @@ const EGovIndexBarChart = () => {
     <div>
       <div
         style={{
-          height: isMobile ? '450px' : '410px',
-          width: '100%',
+          height: chartHeight,
+          width: chartWidth,
+          maxWidth: isMobile ? '100vw' : '700px',
+          margin: '0 auto',
           position: 'relative',
-          overflow: 'hidden',
+          overflow: 'visible',
+          border: '1px solid #e0e0e0',
+          background: '#fff',
         }}
       >
         <ResponsiveBar
@@ -86,6 +107,14 @@ const EGovIndexBarChart = () => {
           labelSkipWidth={12}
           labelSkipHeight={12}
           labelTextColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
+          theme={{
+            labels: {
+              text: {
+                fontSize: isMobile ? 10 : 11,
+                fontWeight: 500,
+              },
+            },
+          }}
           legends={[
             {
               dataFrom: 'keys',

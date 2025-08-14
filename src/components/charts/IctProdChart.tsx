@@ -351,7 +351,7 @@ export default function ICTSunburstChart({
       )}
 
       <div
-        className="relative bg-white mt-8 mb-10"
+        className="relative bg-white mt-8"
         style={{
           maxWidth: 980,
           marginLeft: 'auto',
@@ -359,6 +359,7 @@ export default function ICTSunburstChart({
           border: '1px solid #e0e0e0',
           borderRadius: 0,
           boxShadow: 'none',
+          marginBottom: '1rem',
         }}
       >
         <div style={{ height, width: '100%' }}>
@@ -399,7 +400,7 @@ export default function ICTSunburstChart({
         className="text-xs text-gray-600 text-left"
         style={{
           fontFamily: 'inherit',
-          marginTop: '-10px',
+          marginTop: typeof window !== 'undefined' && window.innerWidth < 640 ? '0.5rem' : '1rem',
           marginBottom: 0,
           padding: 0,
           lineHeight: 1.4,

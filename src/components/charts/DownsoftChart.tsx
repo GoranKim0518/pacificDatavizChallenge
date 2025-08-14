@@ -150,14 +150,22 @@ export default function Downsoft() {
       >
         <div style={{
           width: '100%',
-          height: 450,
+          maxWidth: 700,
+          margin: '0 auto',
+          height: 400,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          paddingBottom: -10,
+          paddingBottom: 0,
         }}>
-          <Bar data={chartData} options={options} />
+          <Bar data={chartData} options={{
+            ...options,
+            layout: {
+              ...options.layout,
+              padding: Object.assign({}, options.layout && options.layout.padding, { left: 8 })
+            }
+          }} />
         </div>
       </div>
 
@@ -165,8 +173,8 @@ export default function Downsoft() {
         className="text-xs text-gray-600 text-left"
         style={{
           fontFamily: 'inherit',
-          marginTop: '-10px',
-          paddingTop: '6px',
+          marginTop: '1rem',
+          paddingTop: '2px',
           paddingBottom: '2px',
         }}
       >

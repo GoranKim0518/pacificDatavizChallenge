@@ -1,6 +1,7 @@
 import HeroSection from './components/sections/HeroSection';
 import ArticleSection from './components/sections/ArticleSection';
-import { Analytics } from '@vercel/analytics/next';
+import { inject } from '@vercel/analytics';
+inject();
 
 const App = () => {
   return (
@@ -15,7 +16,6 @@ const App = () => {
           Thanks to the open-source community for their valuable contributions.
         </div>
       </section>
-      <Analytics />
     </div>
   );
 };

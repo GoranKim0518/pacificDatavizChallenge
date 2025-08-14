@@ -88,7 +88,12 @@ const ArticleSection = () => (
         <div className="not-prose chart-section-responsive" style={{ marginTop: "2rem", minHeight: 330 }}>
           <EducationComputerChart />
         </div>
-        <div className="not-prose chart-section-responsive" style={{ marginTop: "2rem" }}>
+        <div
+          className="not-prose chart-section-responsive"
+          style={{
+            marginTop: typeof window !== 'undefined' && window.innerWidth < 640 ? '0.5rem' : '2rem'
+          }}
+        >
           <IctProdChart />
         </div>
 
